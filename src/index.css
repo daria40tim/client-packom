@@ -34,22 +34,23 @@ body{
 }
 
 .main_t{
-  padding-top: 0 !important;
-  margin-top: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow-x: scroll !important; 
 }
 
 .main_table{
-  width:fit-content;
   height: 90vh;
-  width: 15vw;
   overflow-y: scroll;
   overflow-x: scroll;
-  
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100vw;
 }
 
 .filter{
-  max-height: 90vh;
-  max-width: 15vw;
+  max-height: 85vh;
+  width: 18vw;
   overflow-y: auto;
   overflow-x: auto;
   padding: 0 !important;
@@ -58,17 +59,22 @@ body{
 
 .list
 {
-  max-height: 90vh;
-  max-width: 85vw;
-  overflow-y: auto;
-  overflow-x: auto;
+  height: 88vh;
+  overflow-y: scroll;
   padding: 0 !important;
   margin: 0 !important;
+  width: 81vw;
 }
+
+.accordion-body{
+  padding: 0.5% !important;
+  margin: 0 !important;
+}
+
 /*.navigator{
   width: 100vw;
   height: 10vh;
-  margin-top: 0;
+  margin: 0;
   max-height: 11vh;
   min-height: 9vh;
   z-index: 99;
@@ -116,8 +122,9 @@ body{
 }*/
 
 .one_item{
-  z-index: 1;
+  height: 90vh;
   text-align: left;
+  overflow-y: scroll;
 }
 
 .loading{
@@ -126,6 +133,10 @@ body{
 
 .cr_input{
   width: 100%;
+  min-height: fit-content;
+}
+.dr_input{
+  width: 35vw;
   min-height: fit-content;
 }
 

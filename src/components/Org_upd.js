@@ -267,7 +267,7 @@ const Ord_update = ({match}) => {
 
   //render() {
     return(
-        <div>
+        <div className='one_item'>
         <Prompt
       when={finish}
       message='Все несохраненные изменения удалятся. Вы уверены, что хотите покинуть страницу?'

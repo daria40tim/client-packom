@@ -2,7 +2,7 @@ import { ORG_FAIL, ORG_LIST_FAIL, ORG_LIST_REQUEST, ORG_LIST_SORTEDBY_NAME, ORG_
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
-export const listOrg = () => async(dispatch) => {
+export const listOrg = (names, groups, specs, countries) => async(dispatch) => {
   try {
 
     const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
@@ -18,7 +18,7 @@ export const listOrg = () => async(dispatch) => {
       mode: 'cors'
   }
 
-    const { data } = await axios.get('http://127.0.0.1:8000/api/orgs/',config)
+    const { data } = await axios.post('http://127.0.0.1:8000/api/orgs/job/', {names, groups, specs, countries}, config)
 
     dispatch({
       type: ORG_LIST_SUCCESS,

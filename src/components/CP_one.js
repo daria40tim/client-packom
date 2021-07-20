@@ -39,7 +39,7 @@ const One_CP = ({match}) =>  {
     }
 
     return(
-        <div>
+        <div  className='one_item'>
           <div>
        
         <div>

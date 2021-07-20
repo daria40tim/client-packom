@@ -127,17 +127,17 @@ const  Techs = () =>  {
         </div>
         ) : error ? <Message variant='danger'>{error}</Message> :
         <table className="table main_table">
-          <tr>
-            <td valign="top" align="justify">
-              <Filters></Filters>
-        
+        <tr>
+          <td valign="top" align="justify">
+            <div>
+            <Filters></Filters>
+            </div>
 </td>
 
 
 
 <td align='justify' valign="top">
-      <div className='list'>
-   
+      <div className='list'> 
       {userInfo.group_id == "1" || userInfo.group_id == "3" ? 
   <button type="button" className="btn btn-outline-dark m-2" onClick={onClickTZ}>
     Добавить ТЗ

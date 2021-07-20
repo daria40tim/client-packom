@@ -243,7 +243,7 @@ const Tec_upd = ({match}) => {
     }
      
     return(
-        <div>
+        <div className='one_item'>
           <div>
         <h4 id="name" className="text-center">Общие данные</h4>
         <h5>Общие данные</h5>

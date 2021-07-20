@@ -107,7 +107,7 @@ const Tec = ({match}) => {
   
     
     return(
-        <div>
+        <div  className='one_item'>
           <div>
         <div>
         {loading ? <Loader/> : error ? <Message variant="danger">{error}</Message> : 
@@ -174,12 +174,6 @@ const Tec = ({match}) => {
         return (
           <button className="btn" onClick={onClickDownload} id={i}>{item}</button>
        )}) : <p className="text-start">Документов нет</p>}
-          
-          {Date.parse(tech.end_date)> Date.now() ? userInfo.o_id == tech.o_id ? 
-          <button type="button" className="btn btn-outline-dark" onClick={onClickUpdate}>Изменить</button> :
-          userInfo.group_id == 2 || userInfo.group_id == 3?
-          <button type="button" className="btn btn-outline-dark" onClick={onClickAdd}>Предложить КП</button> : <p></p>
-          :<p>ТЗ больше не активно</p>}
 
           <h5 className="text-start">Описание работ</h5>
           <p className="text-start">{tech.info}</p>
@@ -228,7 +222,11 @@ const Tec = ({match}) => {
       </tr>)}): <p>Заказчик не добавил календарный план</p>}
     </tbody>
   </table>
-
+  {Date.parse(tech.end_date)> Date.now() ? userInfo.o_id == tech.o_id ? 
+          <button type="button" className="btn btn-outline-dark" onClick={onClickUpdate}>Изменить</button> :
+          userInfo.group_id == 2 || userInfo.group_id == 3?
+          <button type="button" className="btn btn-outline-dark" onClick={onClickAdd}>Предложить КП</button> : <p></p>
+          :<p>ТЗ больше не активно</p>}
   <h5 className="text-start">История изменений</h5>
   <textarea className='cr_area' value={tech.history} rows="5"></textarea>
 </div>

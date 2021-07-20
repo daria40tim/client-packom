@@ -74,7 +74,7 @@ const SignUp = ({location}) => {
  
 
     return( 
-        <div>
+        <div className='one_item'>
         <form className="form-signin" >
         <img className="mb-4" src={logo} alt="" width="200" height="72"/>
         <h1 className="h3 mb-3 font-weight-normal">Регистрация новой организации</h1>

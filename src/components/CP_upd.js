@@ -183,7 +183,7 @@ const One_CP = ({match}) =>  {
 
 
     return(
-        <div>
+        <div className='one_item'>
           <div>
         <h4 id="name" className="text-center">Общие данные по ТЗ</h4>
         <h5>Общие данные</h5>

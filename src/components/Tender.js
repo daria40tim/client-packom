@@ -131,7 +131,7 @@ const Tec = ({match}) => {
 
 
     return(
-        <div>
+        <div  className='one_item'>
           <div>
         <div>
         <table className="table w-50 one_item" >

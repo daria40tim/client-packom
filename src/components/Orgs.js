@@ -4,7 +4,6 @@ import {listOrg, sortOrgsByCountry, sortOrgsByGroup, sortOrgsByName, sortOrgsByS
 import Link from 'react-router-dom/Link';
 import Loader from './Loader';
 import Message from './Message';
-import Accordion from 'react-bootstrap/Accordion'
 import Filters from './Filters';
 let specs = ['Уп. материалы', 'Металлоконтейнеры']
 
@@ -13,8 +12,9 @@ const Orgs = () => {
 
   const orgList = useSelector(state => state.orgList)
   
-  useEffect(() => {dispatch(listOrg())}, [dispatch])
-  const {loading, error, orgs} = orgList
+  useEffect(() => {dispatch(listOrg([], [], [], []))}, [dispatch])
+  const {loading, error, orgs} = orgList 
+
   const [nameFlag, setNameFlag] = useState(true)
   const [countryFlag, setCountryFlag] = useState(true)
   const [specFlag, setSpecFlag] = useState(true)
@@ -41,10 +41,6 @@ const Orgs = () => {
     setGroupFlag(!groupFlag)
   }
 
-  const onClick = (e) => {
-    console.log(1)
-  }
-
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -59,7 +55,7 @@ const Orgs = () => {
         </div>
         ) : error ? <Message variant='danger'>{error}</Message> :
          <table className="table main_table">
-          <tr>
+          <tr className='filter-cell'>
             <td valign="top" align="justify">
               <div>
               <Filters></Filters>
@@ -68,8 +64,8 @@ const Orgs = () => {
 
 
 <td align='justify' valign="top">
-      <div className='list'>
-    <table className="table main_t">
+        <div className="table-responsive list">
+    <table className="table ">
     <thead>
       <tr className="org_head">
         <th scope="col">
@@ -102,7 +98,7 @@ const Orgs = () => {
       </tr>
     </thead>
    <tbody>
-   {orgs.map((item, i)=>{
+   {orgs ? orgs.map((item, i)=>{
         return (
       <tr>
         <td>
@@ -116,16 +112,16 @@ const Orgs = () => {
         <td>{item.site}</td>
         <td>{item.phone}</td>
         <td>{item.email}</td>
-      </tr>)})}
+      </tr>)}):'Ничего не найдено'}
     </tbody>
   </table> 
-</div>
+  </div>
 </td>
 </tr>
 </table>
+
 }
 </div>
-
 )
   }
 //}

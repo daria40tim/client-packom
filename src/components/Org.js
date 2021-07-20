@@ -91,11 +91,11 @@ const Or = ({match}) => {
 
   //render() {
     return(
-        <div>
+        <div className='one_item'>
           {loading ? <Loader/>: error ? <Message variant="danger">{error}</Message> :
           <div>
         <div>
-        <table className="table w-50 one_item" >
+        <table className="table w-50" >
           <thead>
           </thead>
           <tbody>

@@ -1,8 +1,10 @@
 import React, { Component, useEffect, useState } from 'react';
+import { Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link, useHistory, withRouter} from 'react-router-dom';
 import { listSelect } from '../actions/selectAction';
 import { createTZ, uploadFile } from '../actions/tzAction';
+import InputMask from "react-input-mask";
 
 Date.prototype.getWeek = function() {
   var date = new Date(this.getTime());
@@ -21,6 +23,7 @@ const Tec_new = () => {
     onClick = (e) => {
      console.log("1")
     }*/
+    const int_mask = /[0-9]+/
 
     const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
     const [proj, setProj] = useState('')
@@ -36,8 +39,8 @@ const Tec_new = () => {
     const [taskCal, setTaskCal] = useState('')
     const [metr, setMetr] = useState('')
     const [doc, setDoc] = useState('')
-    const [count, setCount] = useState(0)
-    const [period, setPeriod] = useState(0)
+    const [count, setCount] = useState('')
+    const [period, setPeriod] = useState('')
     const [cal, setCal] = useState([])
     const [cst, setCst] = useState([])
     const [docs, setDocs] = useState([])
@@ -65,15 +68,56 @@ const Tec_new = () => {
     const onClickCalendars = () => {
       setLast(parseInt(last) + parseInt(period))
       let calendars = [...cal]
+
+      let t = parseInt(new Date(end_date).getWeek()) + parseInt(period) + parseInt(last)
+      if (t > 52){
+        t = t - 52
+      }
       calendars.push({
         task_name: taskCal, 
         period: parseInt(period), 
-        term: parseInt(new Date(end_date).getWeek()) + parseInt(period) + parseInt(last)
+        term: t
       })
       setCal(calendars)
     }
 
     const onClickAccept = () => {
+      if (proj === ''){
+        alert('Заполните поле названия проекта')
+        return
+      }
+      else if (group === ''){
+        alert('Заполните поле группы упаковки')
+        return
+      }
+      else if (type === ''){
+        alert('Заполните поле типа упаковки')
+        return
+      }
+      else if (kind === ''){
+        alert('Заполните поле вида упаковки')
+        return
+      }
+      else if (task === ''){
+        alert('Заполните поле вида задания')
+        return
+      }
+      else if (pay_cond === ''){
+        alert('Заполните поле условия оплаты')
+        return
+      }
+      else if (end_date === ''){
+        alert('Заполните поле даты окончания сбора КП')
+        return
+      }
+      else if (end_date === ''){
+        alert('Заполните поле даты окончания сбора КП')
+        return
+      }
+      else if (end_date === ''){
+        alert('Заполните поле описания работ')
+        return
+      }
       dispatch(createTZ(proj, group, type, kind, task, pay_cond, end_date, privacy.toString(), info, cal, cst, date, docs))
       history.push('/tech/')
     }
@@ -85,20 +129,25 @@ const Tec_new = () => {
       console.log(docs.length)
     }
 
+    const endDateOnChange = (e) => { 
+      setEnd_date(e.target.value)
+    } 
+
    
      
     return(
-        <div>
+        <div className='one_item'>
           <div>
-        <h4 id="name" className="text-center">Общие данные</h4>
-        <h5>Общие данные</h5>
-        <div>
+        <div className='table-responsive'>
         <table className="table w-50 h-1000 one_item" >
           <thead>
           </thead>
           <tbody>
             <tr>
-              <td scope="col" colSpan='2'><h5>Общие данные</h5></td>
+              <td scope="col" colSpan='2'><h2>Общие данные</h2></td>
+            </tr>
+            <tr>
+              <td scope="col" colSpan='2'><h5>Все поля являются обязательными</h5></td>
             </tr>
             <tr>
               <td scope="col">Клиент</td>
@@ -107,21 +156,45 @@ const Tec_new = () => {
             <tr>
               <td scope="col">Проект</td>
               <td scope="col">
-                  <input className='cr_input' name='proj' value={proj} onChange={(e)=>setProj(e.target.value)}></input>
+                  <input className='cr_input' value={proj} onChange={(e)=>setProj(e.target.value)}></input>
+                  </td>
+
+                  <td scope="col">Условия оплаты</td>
+              <td scope="col">
+              <label>Выберите из списка</label>
+                {data.pay_conds ? 
+              <select className="form-select cr_input" id="selector" value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)} placeholder='Не выбрано'>
+                {data.pay_conds.map((item, i) => { return(
+                <option value={item}>{item}</option>
+                )})}
+                </select> : <label>Список пуст</label>}
+                <label>Или введите собственное значение</label>
+              <input className='cr_input' value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)}></input>
                   </td>
             </tr>
             <tr>
               <td scope="col">Группа упаковки</td>
               <td scope="col">
+              <Dropdown>
+              <input className='dr_input' value={group} onChange={(e)=>setGroup(e.target.value)}></input>
+
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" />
+
+                <Dropdown.Menu align={{ lg: 'end' }}>
+                  {data.groups.map((item, i) => { return(
+                    <Dropdown.Item value={item}>{item}</Dropdown.Item>
+                    )})}
+                </Dropdown.Menu>
+              </Dropdown>
                 <label>Выберите из списка</label>
                 {data.groups ? 
-              <select className="form-select cr_input" name="dir" id="selector" value={group} onChange={(e)=>setGroup(e.target.value)} placeholder='Не выбрано'>
+              <select className="form-select cr_input" id="selector" value={group} onChange={(e)=>setGroup(e.target.value)} placeholder='Не выбрано'>
                 {data.groups.map((item, i) => { return(
                 <option value={item}>{item}</option>
                 )})}
                 </select> : <label>Список пуст</label>}
                 <label>Или введите собственное значение</label>
-              <input className='cr_input' name='group' value={group} onChange={(e)=>setGroup(e.target.value)}></input>
+              <input className='cr_input'  value={group} onChange={(e)=>setGroup(e.target.value)}></input>
                   </td>
             </tr>
             <tr>
@@ -129,13 +202,13 @@ const Tec_new = () => {
               <td scope="col">
               <label>Выберите из списка</label>
                 {data.types ? 
-              <select className="form-select cr_input" name="dir" id="selector" value={type} onChange={(e)=>setType(e.target.value)} placeholder='Не выбрано'>
+              <select className="form-select cr_input" id="selector" value={type} onChange={(e)=>setType(e.target.value)} placeholder='Не выбрано'>
                 {data.types.map((item, i) => { return(
                 <option value={item}>{item}</option>
                 )})}
                 </select> : <label>Список пуст</label>}
                 <label>Или введите собственное значение</label>
-              <input className='cr_input' name='type' value={type} onChange={(e)=>setType(e.target.value)}></input>
+              <input className='cr_input' value={type} onChange={(e)=>setType(e.target.value)}></input>
                   </td>
             </tr>
             <tr>
@@ -143,19 +216,19 @@ const Tec_new = () => {
               <td scope="col">
               <label>Выберите из списка</label>
                 {data.kinds ? 
-              <select className="form-select cr_input" name="dir" id="selector" value={kind} onChange={(e)=>setKind(e.target.value)} placeholder='Не выбрано'>
+              <select className="form-select cr_input" id="selector" value={kind} onChange={(e)=>setKind(e.target.value)} placeholder='Не выбрано'>
                 {data.kinds.map((item, i) => { return(
                 <option value={item}>{item}</option>
                 )})}
                 </select> : <label>Список пуст</label>}
                 <label>Или введите собственное значение</label>
-              <input className='cr_input' name='kind' value={kind} onChange={(e)=>setKind(e.target.value)}></input>
+              <input className='cr_input' value={kind} onChange={(e)=>setKind(e.target.value)}></input>
                   </td>
             </tr>
             <tr>
               <td scope="col">Вид задания</td>
               <td scope="col">
-              <input className='cr_input' name='task' value={task} onChange={(e)=>setTask(e.target.value)}></input>
+              <input className='cr_input' value={task} onChange={(e)=>setTask(e.target.value)}></input>
                   </td>
             </tr>
             <tr>
@@ -163,13 +236,13 @@ const Tec_new = () => {
               <td scope="col">
               <label>Выберите из списка</label>
                 {data.pay_conds ? 
-              <select className="form-select cr_input" name="dir" id="selector" value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)} placeholder='Не выбрано'>
+              <select className="form-select cr_input" id="selector" value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)} placeholder='Не выбрано'>
                 {data.pay_conds.map((item, i) => { return(
                 <option value={item}>{item}</option>
                 )})}
                 </select> : <label>Список пуст</label>}
                 <label>Или введите собственное значение</label>
-              <input className='cr_input' name='pay_cond' value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)}></input>
+              <input className='cr_input' value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)}></input>
                   </td>
             </tr>
             <tr>
@@ -179,14 +252,14 @@ const Tec_new = () => {
             <tr>
               <td scope="col">Дата завершения сбора КП</td>
               <td scope="col">
-              <input className='cr_input' name='end_date' value={end_date} onChange={(e)=>setEnd_date(e.target.value)} placeholder="ГГГГ-ММ-ДД"></input>
+                <InputMask mask="9999-99-99" value={end_date} onChange={endDateOnChange} className='cr_input' alwaysShowMask='true' maskPlaceholder='ГГГГ-ММ-ДД'/>
                   </td>
             </tr>
             <tr>
               <td scope="col">Доступ к данным ТЗ</td>
               <td scope="col">
               
-              <select className="form-select cr_input" name="dir" id="selector" value={privacy} onChange={(e)=>setPrivacy(e.target.value)} placeholder='Не выбрано'>
+              <select className="form-select cr_input" id="selector" value={privacy} onChange={(e)=>setPrivacy(e.target.value)} placeholder='Не выбрано'>
               
               <option value={true}>Закрыт</option>
               <option value={false}>Открыт</option>
@@ -204,7 +277,7 @@ const Tec_new = () => {
           <h5>Добавление документов возможно из панели редактирования ТЗ.</h5>
 
           <h5 className="text-start">Описание работ</h5>
-          <textarea className='cr_input' name='adress' value={info} onChange={(e)=>setInfo(e.target.value)}></textarea>
+          <textarea className='cr_input' value={info} onChange={(e)=>setInfo(e.target.value)}></textarea>
 
           <h5 className="text-start">Разбивка стоимости</h5>
           <table className="table w-25" id="cost_table">
@@ -228,23 +301,23 @@ const Tec_new = () => {
       <tr>
         <td>
         {data.tasks ? 
-              <select className="form-select cr_input" name="dir" id="selector" value={taskCost} onChange={(e)=>setTaskCost(e.target.value)} placeholder='Не выбрано'>
+              <select className="form-select cr_input" id="selector" value={taskCost} onChange={(e)=>setTaskCost(e.target.value)} placeholder='Не выбрано'>
                 {data.tasks.map((item, i) => { return(
                 <option value={item}>{item}</option>
                 )})}
                 </select> : <label>Список пуст</label>}
-              <input className='cr_input' name='task_name' value={taskCost} onChange={(e)=>setTaskCost(e.target.value)}></input>
+              <input className='cr_input' value={taskCost} onChange={(e)=>setTaskCost(e.target.value)}></input>
         </td>
         <td>
         {data.metrics ? 
-              <select className="form-select cr_input" name="dir" id="selector" value={metr} onChange={(e)=>setMetr(e.target.value)} placeholder='Не выбрано'>
+              <select className="form-select cr_input" id="selector" value={metr} onChange={(e)=>setMetr(e.target.value)} placeholder='Не выбрано'>
                 {data.metrics.map((item, i) => { return(
                 <option value={item}>{item}</option>
                 )})}
                 </select> : <label>Список пуст</label>}
-              <input className='cr_input' name='task_name' value={metr} onChange={(e)=>setMetr(e.target.value)}></input>
+              <input className='cr_input' value={metr} onChange={(e)=>setMetr(e.target.value)}></input>
         </td>
-        <td><input className='cr_input' name='pay_cond' value={count} onChange={(e)=>setCount(e.target.value)}></input></td>
+        <td><InputMask mask='999999999999' maskChar={null} className='cr_input' value={count} onChange={(e)=>setCount(e.target.value)}></InputMask></td>
       </tr>
       <tr>
         <td colSpan="3"><button type="button" className="btn btn-outline-dark" onClick={onClickCost}>Добавить</button></td>
@@ -279,15 +352,17 @@ const Tec_new = () => {
     <tr>
         <td>
                 {data.task_names ? 
-              <select className="form-select cr_input" name="dir" id="selector" value={taskCal} onChange={(e)=>setTaskCal(e.target.value)} placeholder='Не выбрано'>
+              <select className="form-select cr_input" id="selector" value={taskCal} onChange={(e)=>setTaskCal(e.target.value)} placeholder='Не выбрано'>
                 {data.task_names.map((item, i) => { return(
                 <option value={item}>{item}</option>
                 )})}
                 </select> : <label>Список пуст</label>}
-              <input className='cr_input' name='task_name' value={taskCal} onChange={(e)=>setTaskCal(e.target.value)}></input>
+              <input className='cr_input' value={taskCal} onChange={(e)=>setTaskCal(e.target.value)}></input>
         </td>
-        <td><input className='cr_input' name='pay_cond' value={period} onChange={(e)=>setPeriod(e.target.value)}></input></td>
-        <td>{parseInt(new Date(end_date).getWeek())+parseInt(period)+ parseInt(last)}</td>
+        <td>
+        <InputMask mask='999999999999' maskChar={null} className='cr_input' value={period} onChange={(e)=>setPeriod(e.target.value)}></InputMask>
+        </td>
+        <td>{end_date =='' || period =="" ? 'Заполните конечную дату и срок' : parseInt(new Date(end_date).getWeek())+parseInt(period)+ parseInt(last) >52 ? parseInt(new Date(end_date).getWeek())+parseInt(period)+ parseInt(last)-52:parseInt(new Date(end_date).getWeek())+parseInt(period)+ parseInt(last)}</td>
       </tr>
       <tr>
         <td colSpan="3"><button type="button" className="btn btn-outline-dark" onClick={onClickCalendars}>Добавить</button></td>
