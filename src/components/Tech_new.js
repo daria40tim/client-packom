@@ -1,10 +1,14 @@
 import React, { Component, useEffect, useState } from 'react';
-import { Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
+import { Button, Dropdown, DropdownButton, Form, InputGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link, useHistory, withRouter} from 'react-router-dom';
 import { listSelect } from '../actions/selectAction';
 import { createTZ, uploadFile } from '../actions/tzAction';
 import InputMask from "react-input-mask";
+import check from '../pic/check.svg'
+import x from  '../pic/x.svg'
+import plus from  '../pic/plus.svg'
+
 
 Date.prototype.getWeek = function() {
   var date = new Date(this.getTime());
@@ -60,11 +64,32 @@ const Tec_new = () => {
       costs.push({
         task: taskCost, 
         metr: metr, 
-        count: parseInt(count)
+        count: parseInt(count),
+        active: true,
       })
       setCst(costs)
 
     }
+
+    const onClickCostAccDelete = (e) => {
+      if(cst[e.target.id].active){
+        e.target.innerHTML = "Восстановить"
+        cst[e.target.id].active = false
+      } else {
+        e.target.innerHTML = "Удалить"
+        cst[e.target.id].active = true
+      }
+      /*let costs = [...cst]
+      costs.push({
+        task: taskCost, 
+        metr: metr, 
+        count: parseInt(count),
+        active: true,
+      })
+      setCst(costs)*/
+
+    }
+
     const onClickCalendars = () => {
       setLast(parseInt(last) + parseInt(period))
       let calendars = [...cal]
@@ -110,12 +135,16 @@ const Tec_new = () => {
         alert('Заполните поле даты окончания сбора КП')
         return
       }
-      else if (end_date === ''){
-        alert('Заполните поле даты окончания сбора КП')
+      else if (info === ''){
+        alert('Заполните поле описания работ')
         return
       }
-      else if (end_date === ''){
-        alert('Заполните поле описания работ')
+      else if (cal.length === 0){
+        alert('Календарный план не может быть пустым')
+        return
+      }
+      else if (cst.length === 0){
+        alert('Разбивка стоимости не может быть пуста')
         return
       }
       dispatch(createTZ(proj, group, type, kind, task, pay_cond, end_date, privacy.toString(), info, cal, cst, date, docs))
@@ -156,93 +185,92 @@ const Tec_new = () => {
             <tr>
               <td scope="col">Проект</td>
               <td scope="col">
-                  <input className='cr_input' value={proj} onChange={(e)=>setProj(e.target.value)}></input>
-                  </td>
-
-                  <td scope="col">Условия оплаты</td>
-              <td scope="col">
-              <label>Выберите из списка</label>
-                {data.pay_conds ? 
-              <select className="form-select cr_input" id="selector" value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)} placeholder='Не выбрано'>
-                {data.pay_conds.map((item, i) => { return(
-                <option value={item}>{item}</option>
-                )})}
-                </select> : <label>Список пуст</label>}
-                <label>Или введите собственное значение</label>
-              <input className='cr_input' value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)}></input>
+              <Form.Control className='cr_input'  value={proj} onChange={(e)=>setProj(e.target.value)}/>
                   </td>
             </tr>
             <tr>
               <td scope="col">Группа упаковки</td>
               <td scope="col">
-              <Dropdown>
-              <input className='dr_input' value={group} onChange={(e)=>setGroup(e.target.value)}></input>
-
-                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" />
+              <Dropdown> 
+                <InputGroup className="mb-3">
+              <Form.Control className='dr_input'  value={group} onChange={(e)=>setGroup(e.target.value)}/>
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" drop='end' value={group}/>
 
                 <Dropdown.Menu align={{ lg: 'end' }}>
-                  {data.groups.map((item, i) => { return(
-                    <Dropdown.Item value={item}>{item}</Dropdown.Item>
-                    )})}
-                </Dropdown.Menu>
+                  {data.groups ? data.groups.map((item, i) => { return(
+                    <Dropdown.Item value={item} onSelect={(e)=>setGroup(item)}>{item}</Dropdown.Item>
+                    )}): 'Список пуст'}
+                </Dropdown.Menu>    
+                </InputGroup>
               </Dropdown>
-                <label>Выберите из списка</label>
-                {data.groups ? 
-              <select className="form-select cr_input" id="selector" value={group} onChange={(e)=>setGroup(e.target.value)} placeholder='Не выбрано'>
-                {data.groups.map((item, i) => { return(
-                <option value={item}>{item}</option>
-                )})}
-                </select> : <label>Список пуст</label>}
-                <label>Или введите собственное значение</label>
-              <input className='cr_input'  value={group} onChange={(e)=>setGroup(e.target.value)}></input>
                   </td>
             </tr>
             <tr>
               <td scope="col">Тип упаковки</td>
               <td scope="col">
-              <label>Выберите из списка</label>
-                {data.types ? 
-              <select className="form-select cr_input" id="selector" value={type} onChange={(e)=>setType(e.target.value)} placeholder='Не выбрано'>
-                {data.types.map((item, i) => { return(
-                <option value={item}>{item}</option>
-                )})}
-                </select> : <label>Список пуст</label>}
-                <label>Или введите собственное значение</label>
-              <input className='cr_input' value={type} onChange={(e)=>setType(e.target.value)}></input>
+              <Dropdown> 
+                <InputGroup className="mb-3">
+              <Form.Control className='dr_input'  value={type} onChange={(e)=>setType(e.target.value)}/>
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" drop='end' value={type}/>
+
+                <Dropdown.Menu align={{ lg: 'end' }}>
+                  {data.types ? data.types.map((item, i) => { return(
+                    <Dropdown.Item value={item} onSelect={(e)=>setType(item)}>{item}</Dropdown.Item>
+                    )}): 'Список пуст'}
+                </Dropdown.Menu>    
+                </InputGroup>
+              </Dropdown>
                   </td>
             </tr>
             <tr>
               <td scope="col">Вид упаковки</td>
               <td scope="col">
-              <label>Выберите из списка</label>
-                {data.kinds ? 
-              <select className="form-select cr_input" id="selector" value={kind} onChange={(e)=>setKind(e.target.value)} placeholder='Не выбрано'>
-                {data.kinds.map((item, i) => { return(
-                <option value={item}>{item}</option>
-                )})}
-                </select> : <label>Список пуст</label>}
-                <label>Или введите собственное значение</label>
-              <input className='cr_input' value={kind} onChange={(e)=>setKind(e.target.value)}></input>
+              <Dropdown> 
+                <InputGroup className="mb-3">
+              <Form.Control className='dr_input'  value={kind} onChange={(e)=>setKind(e.target.value)}/>
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" drop='end' value={kind}/>
+
+                <Dropdown.Menu align={{ lg: 'end' }}>
+                  {data.kinds ? data.kinds.map((item, i) => { return(
+                    <Dropdown.Item value={item} onSelect={(e)=>setKind(item)}>{item}</Dropdown.Item>
+                    )}): 'Список пуст'}
+                </Dropdown.Menu>    
+                </InputGroup>
+              </Dropdown>
                   </td>
             </tr>
             <tr>
               <td scope="col">Вид задания</td>
               <td scope="col">
-              <input className='cr_input' value={task} onChange={(e)=>setTask(e.target.value)}></input>
+              <Dropdown> 
+                <InputGroup className="mb-3">
+              <Form.Control className='dr_input'  value={task} onChange={(e)=>setTask(e.target.value)}/>
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" drop='end' value={task}/>
+
+                <Dropdown.Menu align={{ lg: 'end' }}>
+                  {data.task_kinds ? data.task_kinds.map((item, i) => { return(
+                    <Dropdown.Item value={item} onSelect={(e)=>setTask(item)}>{item}</Dropdown.Item>
+                    )}): 'Список пуст'}
+                </Dropdown.Menu>    
+                </InputGroup>
+              </Dropdown>
                   </td>
             </tr>
             <tr>
               <td scope="col">Условия оплаты</td>
               <td scope="col">
-              <label>Выберите из списка</label>
-                {data.pay_conds ? 
-              <select className="form-select cr_input" id="selector" value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)} placeholder='Не выбрано'>
-                {data.pay_conds.map((item, i) => { return(
-                <option value={item}>{item}</option>
-                )})}
-                </select> : <label>Список пуст</label>}
-                <label>Или введите собственное значение</label>
-              <input className='cr_input' value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)}></input>
+              <Dropdown> 
+                <InputGroup className="mb-3">
+              <Form.Control className='dr_input'  value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)}/>
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" drop='end' value={pay_cond}/>
+
+                <Dropdown.Menu align={{ lg: 'end' }}>
+                  {data.pay_conds ? data.pay_conds.map((item, i) => { return(
+                    <Dropdown.Item value={item} onSelect={(e)=>setPay_cond(item)}>{item}</Dropdown.Item>
+                    )}): 'Список пуст'}
+                </Dropdown.Menu>    
+                </InputGroup>
+              </Dropdown>
                   </td>
             </tr>
             <tr>
@@ -280,7 +308,7 @@ const Tec_new = () => {
           <textarea className='cr_input' value={info} onChange={(e)=>setInfo(e.target.value)}></textarea>
 
           <h5 className="text-start">Разбивка стоимости</h5>
-          <table className="table w-25" id="cost_table">
+          <table className="table w-50" id="cost_table">
     <thead>
       <tr className="org_head">
         <th scope="col">Наименование работ</th>
@@ -289,39 +317,58 @@ const Tec_new = () => {
       </tr>
     </thead>
     <tbody>
-    {cst ? cst.map((item)=>{
+    {cst ? cst.map((item, i)=>{
         return(
           <tr>
             <td>{item.task}</td>
             <td>{item.metr}</td>
             <td>{item.count}</td>
+            <td>
+              <button type="button" className="main_button btn btn-outline-dark " onClick={onClickCostAccDelete} id={i}>
+                {item.active ? <img src={x} alt="Accept" width="32" height="32"/> :
+                <img src={plus} alt="Accept" width="32" height="32"/>}
+              </button>
+              </td>
           </tr>
         )}) : <a></a>
       }
       <tr>
         <td>
-        {data.tasks ? 
-              <select className="form-select cr_input" id="selector" value={taskCost} onChange={(e)=>setTaskCost(e.target.value)} placeholder='Не выбрано'>
-                {data.tasks.map((item, i) => { return(
-                <option value={item}>{item}</option>
-                )})}
-                </select> : <label>Список пуст</label>}
-              <input className='cr_input' value={taskCost} onChange={(e)=>setTaskCost(e.target.value)}></input>
+        <Dropdown> 
+                <InputGroup className="mb-3">
+              <Form.Control className='cr_input'  value={taskCost} onChange={(e)=>setTaskCost(e.target.value)}/>
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" drop='end' value={taskCost}/>
+
+                <Dropdown.Menu align={{ lg: 'end' }}>
+                  {data.tasks ? data.tasks.map((item, i) => { return(
+                    <Dropdown.Item value={item} onSelect={(e)=>setTaskCost(item)}>{item}</Dropdown.Item>
+                    )}): 'Список пуст'}
+                </Dropdown.Menu>    
+                </InputGroup>
+              </Dropdown>
         </td>
         <td>
-        {data.metrics ? 
-              <select className="form-select cr_input" id="selector" value={metr} onChange={(e)=>setMetr(e.target.value)} placeholder='Не выбрано'>
-                {data.metrics.map((item, i) => { return(
-                <option value={item}>{item}</option>
-                )})}
-                </select> : <label>Список пуст</label>}
-              <input className='cr_input' value={metr} onChange={(e)=>setMetr(e.target.value)}></input>
+        <Dropdown> 
+                <InputGroup className="mb-3">
+              <Form.Control className='cr_input'  value={metr} onChange={(e)=>setMetr(e.target.value)}/>
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" drop='end' value={metr}/>
+
+                <Dropdown.Menu align={{ lg: 'end' }}>
+                  {data.metrics ? data.metrics.map((item, i) => { return(
+                    <Dropdown.Item value={item} onSelect={(e)=>setMetr(item)}>{item}</Dropdown.Item>
+                    )}): 'Список пуст'}
+                </Dropdown.Menu>    
+                </InputGroup>
+              </Dropdown>
         </td>
         <td><InputMask mask='999999999999' maskChar={null} className='cr_input' value={count} onChange={(e)=>setCount(e.target.value)}></InputMask></td>
+      <td colSpan="3">
+        <button type="button" className="main_button btn btn-outline-dark" onClick={onClickCost}>
+          <img src={check} alt="Accept" width="32" height="32"/>
+        </button>
+        </td>
       </tr>
-      <tr>
-        <td colSpan="3"><button type="button" className="btn btn-outline-dark" onClick={onClickCost}>Добавить</button></td>
-      </tr>
+        
     </tbody>
     </table>
 

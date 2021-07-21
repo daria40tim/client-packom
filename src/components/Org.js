@@ -99,9 +99,6 @@ const Or = ({match}) => {
           <thead>
           </thead>
           <tbody>
-          <tr>
-              <td scope="col" colSpan='2'><h5>{org.name}</h5></td>
-            </tr>
             <tr>
               <td scope="col" colSpan='2'>Общие данные</td>
             </tr>

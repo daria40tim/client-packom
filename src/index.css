@@ -136,7 +136,7 @@ body{
   min-height: fit-content;
 }
 .dr_input{
-  width: 35vw;
+  width: 30vw !important;
   min-height: fit-content;
 }
 
@@ -145,4 +145,9 @@ body{
   min-height: max-content;
   height: max-content;
   max-height: max-content;
+}
+
+.main_button{
+  padding: 0 !important;
+  margin: 0 !important;
 }

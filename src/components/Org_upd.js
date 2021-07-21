@@ -274,8 +274,7 @@ const Ord_update = ({match}) => {
     />
           {loading ? <Loader/>: error ? <Message variant="danger">{error}</Message> :
           <div>
-        <h4 id="name" className="text-center">{org.name}</h4>
-        <h5>Общие данные</h5>
+        <h3>Общие данные</h3>
         <div>
         <table className="table w-50 one_item" >
           <thead>
