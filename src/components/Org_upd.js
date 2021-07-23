@@ -1,71 +1,16 @@
-import React, { Component, useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {Prompt, useHistory, withRouter} from 'react-router-dom';
-import {listOrgAddDoc, listOrgDetails, listOrgDetailsUpdate} from '../actions/orgAction'
+import {listOrgDetails, listOrgDetailsUpdate} from '../actions/orgAction'
 import { listSpecs } from '../actions/selectAction';
 import Loader from './Loader';
 import Message from './Message';
-let data = 
-    {"o_id": "0", 
-      "name": "ЗАО МИФ Мебель", 
-      "group":"Поставщик", 
-      "spec": "Металлоконтейнеры", 
-      "country": "Россия", 
-      "site": "info.ru", 
-      "phone": "+7(495)545-42-59", 
-      "email": "sales@mif-mebel.ru",
-      "adress": "г. Москва ул. Автозаводская 23, стр. 82",
-      "info":`С 2008 года нами было полностью освоено производство многооборотной металической тары для транспортировки кузовных элементов автомобилей и их различных узлов. По настоящее время мы выпустили более двадцати тысяч единиц подобной тары.
-      Наша тара может оснащаться различными пластиковыми и деревянными элементами, обработанными с помощью 3D-технологий, а также тканевыми вставками. Специально для Вас мы предлагаем спектр услуг: порошковая окраска металлоконструкций (широкая цветовая гамма), гибка круглых и профильных труб, гибка листового металла, резка, холодная штамповка изделий из металла, 3D-фрезеровка, пошив чехлов и тентов и многое другое. Применение новейших технологий и современного оборудования позволило нам добиться высокого качества продукции."
-      `, 
-      "orgs": [
-        {"o_id": "0", 
-    "name": "ЗАО МИФ Мебель", 
-    "group": "Поставщик", 
-    "spec": "Металлоконтейнеры", 
-    "country": "Россия", 
-    "site": "info.ru", 
-    "phone": "+7(495)545-42-59", 
-    "email": "sales@mif-mebel.ru",
-    "adress": "г. Москва ул. Автозаводская 23, стр. 82",
-    "info":`С 2008 года нами было полностью освоено производство многооборотной металической тары для транспортировки кузовных элементов автомобилей и их различных узлов. По настоящее время мы выпустили более двадцати тысяч единиц подобной тары.
-    Наша тара может оснащаться различными пластиковыми и деревянными элементами, обработанными с помощью 3D-технологий, а также тканевыми вставками. Специально для Вас мы предлагаем спектр услуг: порошковая окраска металлоконструкций (широкая цветовая гамма), гибка круглых и профильных труб, гибка листового металла, резка, холодная штамповка изделий из металла, 3D-фрезеровка, пошив чехлов и тентов и многое другое. Применение новейших технологий и современного оборудования позволило нам добиться высокого качества продукции."
-    `
-  }, 
-  {"o_id": "1", 
-    "name": `ООО "ПК" ТИСО"`, 
-    "group": "Поставщик", 
-    "spec": "Металлоконтейнеры", 
-    "country": "Россия", 
-    "site": "https://pk-tiso.ru/", 
-    "phone": "+7(812) 336-90-95",
-    "adress": "194044 г. Санкт-Петербург, ул. Боткинская 15, корп. 1", 
-    "email": "info@pk-tiso.ru"
-  }, 
-  {"o_id": "2", 
-    "name": `Та-Пласт`, 
-    "group": "Поставщик", 
-    "spec": "Уп.материалы", 
-    "country": "Россия", 
-    "site": "", 
-    "phone": "7 982 422 22 60", 
-    "adress": "Казань", 
-    "email": "utkuzov.a@gmail.com"
-  }, 
-      ], 
-      "docs": ["Устав.pdf", "1.doc"],
-      "history": "" 
-    }
 
 const Ord_update = ({match}) => {
   const dispatch = useDispatch()
 
   const orgDetails = useSelector(state => state.orgDetails)
   const {loading, error, org} = orgDetails
-
-  const orgUpdateDetails = useSelector(state => state.orgUpdateDetails)
-  //const { success } = orgUpdateDetails
 
   useEffect(() => {
     dispatch(listOrgDetails(match.params.o_id))}, [dispatch, match])
@@ -75,11 +20,6 @@ const Ord_update = ({match}) => {
   useEffect(() => {dispatch(listSpecs())}, [dispatch])
 
   const {data} = specsList
-
- /* constructor(props) {
-    super(props);
-        this.onClick = this.onClick.bind(this)
-    }*/
     const history = useHistory();
 
     const [adress, setAdress] = useState("")
@@ -91,7 +31,7 @@ const Ord_update = ({match}) => {
     const [password, setPassword] = useState('')
     const [old_password, setOldPassword] = useState('')
     const [info, setInfo] = useState("")
-    const [file, setFile] = useState()
+    const [setFile] = useState()
     const [docs, setDocs] = useState([])
     const [specs, setSpecs] = useState([])
     const [story, setStory] = useState('')
@@ -113,10 +53,6 @@ const Ord_update = ({match}) => {
     }, [org.specs, org.history])
 
     const onClickDocs= (e) => {
-      /*let data = new FormData()
-      data.append('doc', file)
-      dispatch(listOrgAddDoc(data))
-      console.log(1)*/
       var fileInput = document.getElementById("myfileinput");
 
       let auth = "Bearer " + userInfo.token
@@ -170,15 +106,15 @@ const Ord_update = ({match}) => {
 
   const onClickAddSpec = (e) => {
     let a = [...specs]
-    if (specs.filter( val => val.name == spec).length>0 || specs.filter( val => val.name == spec_).length>0){
+    if (specs.filter( val => val.name === spec).length>0 || specs.filter( val => val.name === spec_).length>0){
       alert('Такая специализация уже присвоена организации') 
       return
     }
-    if (spec==''&&spec_==''){
+    if (spec===''&&spec_===''){
       alert('Поле специализации не заполнено') 
       return
     }
-    spec_!=''? 
+    spec_!==''? 
     a.push({
       active: true, 
       name: spec_
@@ -188,7 +124,7 @@ const Ord_update = ({match}) => {
       name: spec
     })
 
-    if (spec_ != ''){
+    if (spec_ !== ''){
       let s = story + '\n Добавлена специализация ' + spec_ + '; Дата добавления: ' + new Date().toISOString().slice(0, 10) + ';'
       setStory(s)
     }
@@ -204,55 +140,55 @@ const Ord_update = ({match}) => {
   }
 
     const onClickSave= () => {
-      if (password != old_password){
+      if (password !== old_password){
         alert('Пароли не совпадают')
         return
       }
       let hi = ''
         let adress_ = ''
-        if (adress != ''){ 
+        if (adress !== ''){ 
             adress_ = adress
             hi = hi + " \n Изменен адрес: " + adress_ + " Дата: " + new Date().toISOString().slice(0, 10)
         }else {
             adress_ = org.adress
         }
         let password_ = ''
-        if (password != ''){ 
+        if (password !== ''){ 
             password_ = password
             hi = hi + " \n Изменен пароль. Дата: " + new Date().toISOString().slice(0, 10)
         }else {
             password_ = ""
         }
         let phone_ = ''
-        if (phone != ''){ 
+        if (phone !== ''){ 
             phone_ = phone
             hi = hi + " \n Изменен телефон: " + phone_ + " Дата: " + new Date().toISOString().slice(0, 10)
         }else {
             phone_ = org.phone
         }
         let email_ = ''
-        if (email != ''){ 
+        if (email !== ''){ 
             email_ = email
             hi = hi + " \n Изменен адрес электронной почты: " + email_ + " Дата: " + new Date().toISOString().slice(0, 10)
         }else {
             email_ = org.email
         }
         let site_ = ''
-        if (site != ''){ 
+        if (site !== ''){ 
             site_ = site
             hi = hi + " \n Изменен сайт: " + site_ + " Дата: " + new Date().toISOString().slice(0, 10)
         }else {
             site_ = org.site
         }
         /*let spec_ = ''
-        if (spec != ''){ 
+        if (spec !== ''){ 
             spec_ = spec
             hi = hi + " \n Изменена специализация: " + spec_ + " Дата: " + new Date().toISOString().slice(0, 10)
         }else {
             spec_ = org.spec
         }*/
         let info_ = ''
-        if (info != ''){ 
+        if (info !== ''){ 
             info_ = info
             hi = hi + " \n Изменена общая информация: " + info_ + " Дата: " + new Date().toISOString().slice(0, 10)
         }else {
@@ -281,54 +217,54 @@ const Ord_update = ({match}) => {
           </thead>
           <tbody>
           <tr>
-              <td scope="col" colSpan='2'><h5>{org.name}</h5></td>
+              <td colSpan='2'><h5>{org.name}</h5></td>
             </tr>
             <tr>
-              <td scope="col" colSpan='2'>Общие данные</td>
+              <td colSpan='2'>Общие данные</td>
             </tr>
             <tr>
-              <td scope="col">Название</td>
-              <td scope="col">{org.name}</td>
+              <td>Название</td>
+              <td>{org.name}</td>
             </tr>
             <tr>
-              <td scope="col">Группа</td>
-              <td scope="col">{org.group}</td>
+              <td>Группа</td>
+              <td>{org.group}</td>
             </tr>
             <tr>
-              <td scope="col">Страна</td>
-              <td scope="col">{org.country}</td>
+              <td>Страна</td>
+              <td>{org.country}</td>
             </tr>
             <tr>
-              <td scope="col">Логин</td>
-              <td scope="col">{org.login}</td>
+              <td>Логин</td>
+              <td>{org.login}</td>
             </tr>
             <tr>
-              <td scope="col">Адрес</td>
-              <td scope="col">
+              <td>Адрес</td>
+              <td>
                   <input className='cr_input' value={adress} name='adress' onChange={(e)=>setAdress(e.target.value)} placeholder={org.adress}></input>
                   </td>
             </tr>
             <tr>
-              <td scope="col">Телефон</td>
-              <td scope="col">
+              <td>Телефон</td>
+              <td>
               <input className='cr_input' name='phone' value={phone} onChange={(e)=>setPhone(e.target.value)} placeholder={org.phone}></input>
                   </td>
             </tr>
             <tr>
-              <td scope="col">Email</td>
-              <td scope="col">
+              <td>Email</td>
+              <td>
               <input className='cr_input' value={email} name='email' onChange={(e)=>setEmail(e.target.value)} placeholder={org.email}></input>
                   </td>
             </tr>
             <tr>
-              <td scope="col">Сайт</td>
-              <td scope="col">
+              <td>Сайт</td>
+              <td>
               <input className='cr_input' value={site} name='site' onChange={(e)=>setSite(e.target.value)} placeholder={org.site}></input>
                   </td>
             </tr>
-            {userInfo.group_id =="2" || userInfo.group_id =="3" ? <tr>
-              <td scope="col">Специализация</td>
-              <td scope="col">
+            {userInfo.group_id ==="2" || userInfo.group_id ==="3" ? <tr>
+              <td>Специализация</td>
+              <td>
               {specs ? specs.map((item, i) => {return(
               <div>
                 <label>{item.name}</label>
@@ -351,14 +287,14 @@ const Ord_update = ({match}) => {
               </td>
             </tr>:<p></p>}
             <tr>
-              <td scope="col">Новый пароль</td>
-              <td scope="col">
+              <td>Новый пароль</td>
+              <td>
               <input type='password' className='cr_input' value={password} name='password' onChange={(e)=>setPassword(e.target.value)}></input>
               </td>
             </tr>
             <tr>
-              <td scope="col">Подтвердите пароль</td>
-              <td scope="col">
+              <td>Подтвердите пароль</td>
+              <td>
               <input type='password' className='cr_input' value={old_password} name='password' onChange={(e)=>setOldPassword(e.target.value)}></input>
               </td>
             </tr>

@@ -1,8 +1,7 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link, useHistory, withRouter} from 'react-router-dom';
 import { listCPDetails, cpUpdate, cpDeleteCal, cpDeleteCst } from '../actions/cpAction';
-import { cpDeleteCalReducer, cpDeleteCstReducer } from '../reducers/cpReducers';
 
 
 Date.prototype.getWeek = function() {
@@ -20,9 +19,8 @@ const One_CP = ({match}) =>  {
     const [cst, setCst] = useState([])
     const [cal, setCal] = useState([])
     const [docs, setDocs] = useState([])
-    const [dcs, setDcs] = useState([])
-    const [doc, setDoc] = useState('')
-    const [file, setFile] = useState()
+    const [dcs] = useState([])
+    const [setFile] = useState()
   let tz_last = 0
   let last = 0
   let c = []
@@ -35,7 +33,7 @@ const One_CP = ({match}) =>  {
   const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
 
   const cpDetails = useSelector(state => state.cpDetails)
-  const {loading, error, cp} = cpDetails
+  const {cp} = cpDetails
 
   useEffect(() => {
     dispatch(listCPDetails(match.params.cp_id))
@@ -55,12 +53,12 @@ const One_CP = ({match}) =>  {
               alert('Поля цен за единицу должны быть целыми')
               return
             }
-            if (document.getElementById(index).value != ''){ 
+            if (document.getElementById(index).value !== ''){ 
             c[index].ppu = document.getElementById(index).value}
             document.getElementById(index).setAttribute('disabled', true)
         }
         for (let index = 0; index < c.length; index++) {
-            if (document.getElementById(index+100000).value != ''){
+            if (document.getElementById(index+100000).value !== ''){
             c[index].info = document.getElementById(index+100000).value}
             document.getElementById(index+100000).setAttribute('disabled', true)
         }
@@ -71,7 +69,7 @@ const One_CP = ({match}) =>  {
 
     }
 
-    const onClickDocs= (e) => {
+    const onClickDocs= () => {
       var fileInput = document.getElementById("myfileinput");
 
       let auth = "Bearer " + userInfo.token
@@ -114,7 +112,7 @@ const One_CP = ({match}) =>  {
             alert('Поля периодов должны быть целыми')
             return
           }
-            if (document.getElementById(index+200000).value != ''){ 
+            if (document.getElementById(index+200000).value !== ''){ 
             ca[index].period = parseInt(document.getElementById(index+200000).value)}
             document.getElementById(index+200000).setAttribute('disabled', true)
         }
@@ -129,28 +127,28 @@ const One_CP = ({match}) =>  {
     const onClickAccept = (e) => {
         let hi = ''
         let pay_cond_ = ''
-        if (pay_cond != ''){ 
+        if (pay_cond !== ''){ 
             pay_cond_ = pay_cond
             hi = hi + " \n Изменены условия оплаты: " + pay_cond_ + " Дата: " + new Date().toISOString().slice(0, 10)
         }else {
             pay_cond_ = cp.pay_cond
         }
         let end_date_ = ''
-        if (end_date != ''){ 
+        if (end_date !== ''){ 
             end_date_ = end_date
             hi = hi + " \n Изменена конечная дата: " + end_date_ + " Дата: " + new Date().toISOString().slice(0, 10)
         }else {
             end_date_ = cp.end_date
         }
         let info_ = ''
-        if (info != ''){ 
+        if (info !== ''){ 
             info_ = info
             hi = hi + " \n Изменена общая информация: " + info_ + " Дата: " + new Date().toISOString().slice(0, 10)
         }else {
             info_ = cp.info
         }
-        let cal_ = []
-        if (cal != []){ 
+        /*let cal_ = []
+        if (cal !== []){ 
             cal_ = cal
             cal.forEach(element => {
               hi = hi + " \n Обновлен график: " + element.task_name + " длительностью " + element.period + " кн. Дата: " + new Date().toISOString().slice(0, 10)
@@ -159,23 +157,23 @@ const One_CP = ({match}) =>  {
             cal_ = cal
         }
         let cst_ = []
-        if (cst != []){ 
+        if (cst !== []){ 
             cst_ = cst
             cst.forEach(element => {
               hi = hi + " \n Обновлена стоимость: " + element.task + ". Дата: " + new Date().toISOString().slice(0, 10)
             });
         }else {
             cst_ = cst
-        }
-        let docs_ = []
-        if (docs != []){ 
+        }*/
+        /*let docs_ = []
+        if (docs !== []){ 
             docs_ = docs
             docs.forEach(element => {
               hi = hi + " \n Добавлен документ: " + element + ". Дата: " + new Date().toISOString().slice(0, 10)
             });
         }else {
             docs_ = docs
-        }
+        }*/
 
         dispatch(cpUpdate(parseInt(match.params.cp_id), pay_cond_, end_date_, info_, cal, cst, dcs, hi+cp.history))
         history.push('/commertial/')
@@ -198,79 +196,79 @@ const One_CP = ({match}) =>  {
           </thead>
           <tbody>
             <tr>
-              <td scope="col" colSpan='2'><h5>Общие данные по ТЗ</h5></td>
+              <td colSpan='2'><h5>Общие данные по ТЗ</h5></td>
             </tr>
             <tr>
-              <td scope="col">Клиент</td>
-              <td scope="col">
+              <td>Клиент</td>
+              <td>
               <Link to={`/orgs/link/${cp.tz_o_id}`} >
                   {cp.client}
                 </Link>
                   </td>
             </tr>
             <tr>
-              <td scope="col">Проект</td>
-              <td scope="col">{cp.proj}</td>
+              <td>Проект</td>
+              <td>{cp.proj}</td>
             </tr>
             <tr>
-              <td scope="col">Группа упаковки</td>
-              <td scope="col">{cp.group}</td>
+              <td>Группа упаковки</td>
+              <td>{cp.group}</td>
             </tr>
             <tr>
-              <td scope="col">Тип упаковки</td>
-              <td scope="col">{cp.type}</td>
+              <td>Тип упаковки</td>
+              <td>{cp.type}</td>
             </tr>
             <tr>
-              <td scope="col">Вид упаковки</td>
-              <td scope="col">{cp.kind}</td>
+              <td>Вид упаковки</td>
+              <td>{cp.kind}</td>
             </tr>
             <tr>
-              <td scope="col">Вид задания</td>
-              <td scope="col">{cp.task_name}</td>
+              <td>Вид задания</td>
+              <td>{cp.task_name}</td>
             </tr>
             <tr>
-              <td scope="col">Условия оплаты</td>
-              <td scope="col">{cp.tz_pay_cond}</td>
+              <td>Условия оплаты</td>
+              <td>{cp.tz_pay_cond}</td>
             </tr>
             <tr>
-              <td scope="col">Дата начала сбора КП</td>
-              <td scope="col">{cp.tz_date}</td>
+              <td>Дата начала сбора КП</td>
+              <td>{cp.tz_date}</td>
             </tr>
             <tr>
-              <td scope="col">Дата завершения сбора КП</td>
-              <td scope="col">{cp.tz_end_date}</td>
+              <td>Дата завершения сбора КП</td>
+              <td>{cp.tz_end_date}</td>
             </tr>
             <tr>
-              <td scope="col">Доступ к данным ТЗ</td>
-              <td scope="col">{cp.privacy}</td>
+              <td>Доступ к данным ТЗ</td>
+              <td>{cp.privacy}</td>
             </tr>
             <tr>
-              <td scope="col">Номер ТЗ</td>
-              <td scope="col">
+              <td>Номер ТЗ</td>
+              <td>
               <Link to={`/techs/link/${cp.tz_id}`} >
                   {cp.tz_id}
                   </Link>
                   </td>
             </tr>
             <tr>
-              <td scope="col">Статус ТЗ</td>
-              <td scope="col">{Date.parse(cp.tz_end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
+              <td>Статус ТЗ</td>
+              <td>{Date.parse(cp.tz_end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2">
+              <td colSpan="2">
                   <h5>Описание работ по ТЗ</h5>
             </td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2">{cp.tz_info}</td>
+              <td colSpan="2">{cp.tz_info}</td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2">
+              <td colSpan="2">
                   <h5>Документация ТЗ</h5>
                   </td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2">{cp.tz_docs ? cp.tz_docs.map((item, i)=>{
+              <td colSpan="2">{cp.tz_docs ? cp.tz_docs.map((item, i)=>{
         return (
           <p className="text-start">{item}</p>
        )}) : <p className="text-start">Документов нет</p>}
@@ -290,43 +288,43 @@ const One_CP = ({match}) =>  {
           </thead>
           <tbody>
             <tr>
-              <td scope="col" colSpan='2'><h5>Общие данные от поставщика</h5></td>
+              <td colSpan='2'><h5>Общие данные от поставщика</h5></td>
             </tr>
             <tr>
-              <td scope="col">Поставщик</td>
-              <td scope="col">
+              <td>Поставщик</td>
+              <td>
               <Link to={`/orgs/link/${cp.o_id}`} >
                   {cp.org}
                 </Link>
             </td>
             </tr>
             <tr>
-              <td scope="col">Условия оплаты</td>
-              <td scope="col"><input className='cr_input' name='pay_cond' value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)} placeholder={cp.pay_cond}></input></td>
+              <td>Условия оплаты</td>
+              <td><input className='cr_input' name='pay_cond' value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)} placeholder={cp.pay_cond}></input></td>
             </tr>
             <tr>
-              <td scope="col">Дата предоставления КП</td>
-              <td scope="col">{cp.date}</td>
+              <td>Дата предоставления КП</td>
+              <td>{cp.date}</td>
             </tr>
             <tr>
-              <td scope="col">Срок действия КП</td>
-              <td scope="col"><input className='cr_input' name='pay_cond' value={end_date} onChange={(e)=>setEnd_date(e.target.value)} placeholder={cp.end_date}></input></td>
+              <td>Срок действия КП</td>
+              <td><input className='cr_input' name='pay_cond' value={end_date} onChange={(e)=>setEnd_date(e.target.value)} placeholder={cp.end_date}></input></td>
             </tr>
             <tr>
-              <td scope="col">Статус КП</td>
-              <td scope="col">{Date.parse(cp.end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
+              <td>Статус КП</td>
+              <td>{Date.parse(cp.end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2"><h5>Описание работ от поставщика</h5></td>
+              <td colSpan="2"><h5>Описание работ от поставщика</h5></td>
             </tr>
             <tr>
-            <td scope="col" colSpan="2"><input className='cr_input' name='pay_cond' value={info} onChange={(e)=>setInfo(e.target.value)} placeholder={cp.info}></input></td>
+            <td colSpan="2"><input className='cr_input' name='pay_cond' value={info} onChange={(e)=>setInfo(e.target.value)} placeholder={cp.info}></input></td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2"><h5>Документация от поставщика</h5></td>
+              <td colSpan="2"><h5>Документация от поставщика</h5></td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2"> {cp.docs ? cp.docs.map((item, i)=>{
+              <td colSpan="2"> {cp.docs ? cp.docs.map((item, i)=>{
         return (
           <p className="text-start">{item}</p>
        )}) : <p className="text-start"></p>}
@@ -357,9 +355,9 @@ const One_CP = ({match}) =>  {
         <table className="table" id="org_table">
     <thead>
       <tr className="org_head">
-        <th scope="col">Наименование работ</th>
-        <th scope="col">Единицы измерения</th>
-        <th scope="col">Кол-во</th>
+        <th>Наименование работ</th>
+        <th>Единицы измерения</th>
+        <th>Кол-во</th>
       </tr>
     </thead>
     <tbody>
@@ -380,9 +378,9 @@ const One_CP = ({match}) =>  {
 <table className="table" id="org_table">
     <thead>
       <tr className="org_head">
-        <th scope="col">Цена б/НДС/ед.</th>
-        <th scope="col">Итого б/НДС</th>
-        <th scope="col">Комментарий</th>
+        <th>Цена б/НДС/ед.</th>
+        <th>Итого б/НДС</th>
+        <th>Комментарий</th>
         </tr>
     </thead>
     <tbody>
@@ -413,13 +411,13 @@ const One_CP = ({match}) =>  {
           <table className="table" id="org_table">
     <thead>
     <tr className="org_head">
-        <th scope="col">Наименование работ</th>
-        <th scope="col" colSpan="2">Требования клиента</th>
+        <th>Наименование работ</th>
+        <th colSpan="2">Требования клиента</th>
       </tr>
       <tr className="org_head">
-        <th scope="col"></th>
-        <th scope="col">Период, КН</th>
-        <th scope="col">Срок</th>
+        <th></th>
+        <th>Период, КН</th>
+        <th>Срок</th>
       </tr>
     </thead>
     <tbody>
@@ -437,11 +435,11 @@ const One_CP = ({match}) =>  {
   <table className="table" id="org_table">
     <thead>
     <tr className="org_head">
-        <th scope="col" colSpan="3">Предложение поставщика</th>
+        <th colSpan="3">Предложение поставщика</th>
       </tr>
       <tr className="org_head">
-        <th scope="col">Период, КН</th>
-        <th scope="col">Срок</th>
+        <th>Период, КН</th>
+        <th>Срок</th>
       </tr>
     </thead>
     <tbody>

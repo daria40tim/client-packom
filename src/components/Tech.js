@@ -1,59 +1,10 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link, useHistory, withRouter} from 'react-router-dom';
 import { listTechDetails, listTzDownDoc } from '../actions/tzAction';
 import Loader from './Loader';
 import Message from './Message';
-/*let data = 
-    {'date': '12.01.2021', 
-    'org': 'Организация 8', 
-    "o_id": '1',
-    'tz_id': '4368', 
-    'end_date': '26.01.2021', 
-    'proj': 'ГК 6040', 
-    'group': 'Гофрокороб', 
-    'kind': 'Стандартная', 
-    'type': 'Одноразовая', 
-    'task': 'Изготовление серии', 
-    'tz_st': 'Активно', 
-    'tender_st': 'Не проведен', 
-    'count': '', 
-    'cp_st': 'Не подано',
-    'pay_cond': '100% постоплата',
-    'private': 'Общий', 
-    'info': `Требуется изготовить и доставить 150 гофрокоробов. Изготавливаемая упаковка должна отвечать требованиям технической документации (см. вложение). Дополнительно необходимо нанести маркировку с 4-х сторон`,
-    "docs": ["Пример.pdf", "1.doc"],
-    "costs": [
-        {
-            "task": "Изготовление серии",
-            "metr": "шт.",
-            "count": 150
-        },
-        {
-            "task": "Доставка",
-            "metr": "рейс",
-            "count": 1
-        }
-    ], 
-    "calendars":[
-        {
-            "name": "Разработка концепта",
-            "period": 1,
-            "term": 7
-        },
-        {
-            "name": "Изготовление серии",
-            "period": 2,
-            "term": 9
-        },
-        {
-            "name": "Доставка",
-            "period": 1,
-            "term": 10
-        }
-    ], 
-    "history": "" 
-    }*/
+import pencil from '../pic/pencil.svg'
 
 const Tec = ({match}) => {
   const dispatch = useDispatch()
@@ -65,8 +16,6 @@ const Tec = ({match}) => {
 
   const [cal, setCal] = useState([])
   const [cps, setCps] = useState([])
-  const [date, setDate] = useState('')
-  const [end_date, setEndDate] = useState('')
   let last = 0
 
 
@@ -75,11 +24,8 @@ const Tec = ({match}) => {
   }, [dispatch, match])
 
   useEffect(() => {
-    //let d = tech.date.toISOString().slice(0, 10)
     setCal(tech.cal)
     setCps(data.cps)
-    //setDate(d)
-    //setEndDate(new Date(tech.end_date).toISOString().slice(0, 10))
 })
 
   
@@ -109,127 +55,142 @@ const Tec = ({match}) => {
     return(
         <div  className='one_item'>
           <div>
-        <div>
+        
         {loading ? <Loader/> : error ? <Message variant="danger">{error}</Message> : 
-        <table className="table w-50 one_item" >
+        <div className='table-responsive'>
+          {Date.parse(tech.end_date)> Date.now() ? userInfo.o_id === tech.o_id ? 
+          <button type="button" className="btn btn-outline-dark m-2" onClick={onClickUpdate}>
+            <img src={pencil} alt='Изменить' width='25'></img>
+            </button> :
+          userInfo.group_id === 2 || userInfo.group_id === 3?
+          <button type="button" className="btn btn-outline-dark" onClick={onClickAdd}>Предложить КП</button> : <p></p>
+          :'ТЗ больше не активно'}
+        <h2>Общие данные</h2>
+        <table className='table'>
+          <tbody>
+            <tr>
+              <td>
+
+              
+        <table className="table w-100" >
           <thead>
           </thead>
           <tbody>
             <tr>
-              <td scope="col" colSpan='2'><h5>Общие данные</h5></td>
+              <td>Клиент</td>
+              <td>
+              <Link to={`/orgs/link/${tech.o_id}`} >{tech.client}</Link></td>
             </tr>
             <tr>
-              <td scope="col">Клиент</td>
-              <td scope="col">
-              <Link to={`/orgs/link/${tech.o_id}`} >
-                  {tech.client}
-                  </Link>
-                  </td>
+              <td>Проект</td>
+              <td>{tech.proj}</td>
             </tr>
             <tr>
-              <td scope="col">Проект</td>
-              <td scope="col">{tech.proj}</td>
+              <td>Группа упаковки</td>
+              <td>{tech.group}</td>
             </tr>
             <tr>
-              <td scope="col">Группа упаковки</td>
-              <td scope="col">{tech.group}</td>
+              <td>Тип упаковки</td>
+              <td>{tech.type}</td>
             </tr>
             <tr>
-              <td scope="col">Тип упаковки</td>
-              <td scope="col">{tech.type}</td>
+              <td>Вид упаковки</td>
+              <td>{tech.kind}</td>
             </tr>
             <tr>
-              <td scope="col">Вид упаковки</td>
-              <td scope="col">{tech.kind}</td>
+              <td>Вид задания</td>
+              <td>{tech.task}</td>
             </tr>
             <tr>
-              <td scope="col">Вид задания</td>
-              <td scope="col">{tech.task}</td>
+              <td>Условия оплаты</td>
+              <td>{tech.pay_cond}</td>
             </tr>
             <tr>
-              <td scope="col">Условия оплаты</td>
-              <td scope="col">{tech.pay_cond}</td>
+              <td>Дата начала сбора КП</td>
+              <td>{tech.date ? tech.date.slice(0,10):''}</td>
             </tr>
             <tr>
-              <td scope="col">Дата начала сбора КП</td>
-              <td scope="col">{tech.date ? tech.date.slice(0,10):''}</td>
+              <td>Дата завершения сбора КП</td>
+              <td>{tech.end_date ? tech.end_date.slice(0,10):''}</td>
             </tr>
             <tr>
-              <td scope="col">Дата завершения сбора КП</td>
-              <td scope="col">{tech.end_date ? tech.end_date.slice(0,10):''}</td>
+              <td>Доступ к данным ТЗ</td>
+              <td>{ tech.privacy==='true' ? "Для доверенных поставщиков" : "Открыт"}</td>
             </tr>
             <tr>
-              <td scope="col">Доступ к данным ТЗ</td>
-              <td scope="col">{ tech.privacy=='true' ? "Для доверенных поставщиков" : "Открыт"}</td>
+              <td>Статус ТЗ</td>
+              <td>{Date.parse(tech.end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
             </tr>
             <tr>
-              <td scope="col">Статус ТЗ</td>
-              <td scope="col">{Date.parse(tech.end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
+              <td>Документация</td>
+            <td>
+                {tech.docs ? tech.docs.map((item, i)=>{
+              return (
+                <button className="btn" onClick={onClickDownload} id={i}>{item}</button>
+            )}) : <p className="text-start">Документов нет</p>}
+            </td>
             </tr>
           </tbody>
-        </table>}
-        </div>
-          <h5 id="name" className="text-start">Документация</h5>
-          {tech.docs ? tech.docs.map((item, i)=>{
-        return (
-          <button className="btn" onClick={onClickDownload} id={i}>{item}</button>
-       )}) : <p className="text-start">Документов нет</p>}
+        </table>
+        </td>
+        <td>
+        <h5 className="text-start">Разбивка стоимости</h5>
+          <table className="table w-100" id="org_table">
+            <thead>
+              <tr className="org_head">
+                <th>Наименование работ</th>
+                <th>Единицы измерения</th>
+                <th>Кол-во</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tech.cst ? tech.cst.map((item, i)=>{
+                return (
+              <tr>
+                <td>{item.task}</td>
+                <td>{item.metr}</td>
+                <td>{item.count}</td>
+              </tr>)}): <tr><td>'Заказчик не добавил этапы работ'</td></tr>}
+            </tbody>
+          </table> 
 
+          <h5 className="text-start">График выполнения работ</h5>
+          <table className="table w-100" id="org_table">
+            <thead>
+              <tr className="org_head">
+                <th>Наименование работ</th>
+                <th colSpan="2">Требования клиента</th>
+              </tr>
+              <tr className="org_head">
+                <th></th>
+                <th>Период, КН</th>
+                <th>Срок</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cal ? cal.map((item, i)=>{ last = last + item.period
+                return (
+              <tr>
+                <td>{item.task_name}</td>
+                <td>{item.period}</td>
+                <td>{new Date(tech.end_date).getWeek() + last}</td>
+              </tr>)}):<tr><td>'Заказчик не добавил календарный план'</td></tr>}
+            </tbody>
+          </table>
+        </td>
+        </tr>
+        <tr>
+          <td colSpan='2'>
           <h5 className="text-start">Описание работ</h5>
           <p className="text-start">{tech.info}</p>
-
-          <h5 className="text-start">Разбивка стоимости</h5>
-          <table className="table w-25" id="org_table">
-    <thead>
-      <tr className="org_head">
-        <th scope="col">Наименование работ</th>
-        <th scope="col">Единицы измерения</th>
-        <th scope="col">Кол-во</th>
-      </tr>
-    </thead>
-    <tbody>
-      {tech.cst ? tech.cst.map((item, i)=>{
-        return (
-      <tr>
-        <td>{item.task}</td>
-        <td>{item.metr}</td>
-        <td>{item.count}</td>
-      </tr>)}): <p>Заказчик не добавил этапы работ</p>}
-    </tbody>
-  </table> 
-
-
-  <h5 className="text-start">График выполнения работ</h5>
-          <table className="table w-25" id="org_table">
-    <thead>
-      <tr className="org_head">
-        <th scope="col">Наименование работ</th>
-        <th scope="col" colSpan="2">Требования клиента</th>
-      </tr>
-      <tr className="org_head">
-        <th scope="col"></th>
-        <th scope="col">Период, КН</th>
-        <th scope="col">Срок</th>
-      </tr>
-    </thead>
-    <tbody>
-      {cal ? cal.map((item, i)=>{ last = last + item.period
-        return (
-      <tr>
-        <td>{item.task_name}</td>
-        <td>{item.period}</td>
-        <td>{new Date(tech.end_date).getWeek() + last}</td>
-      </tr>)}): <p>Заказчик не добавил календарный план</p>}
-    </tbody>
-  </table>
-  {Date.parse(tech.end_date)> Date.now() ? userInfo.o_id == tech.o_id ? 
-          <button type="button" className="btn btn-outline-dark" onClick={onClickUpdate}>Изменить</button> :
-          userInfo.group_id == 2 || userInfo.group_id == 3?
-          <button type="button" className="btn btn-outline-dark" onClick={onClickAdd}>Предложить КП</button> : <p></p>
-          :<p>ТЗ больше не активно</p>}
   <h5 className="text-start">История изменений</h5>
   <textarea className='cr_area' value={tech.history} rows="5"></textarea>
-</div>
+          </td>
+        </tr>
+          </tbody>
+        </table> 
+        </div>}
+        </div>
 </div>
 )
   }

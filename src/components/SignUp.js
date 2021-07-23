@@ -1,14 +1,10 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
-import axios from 'axios';
 import { listCountry, selectLogin } from '../actions/selectAction';
 import { register } from '../actions/userAction';
 import logo from '../pic/logo.svg' 
 
-const SignUp = ({location}) => {
-
-    const history = useHistory();
+const SignUp = () => {
 
     const [email, setEmail] = useState('')
     const [name, setName] = useState('')
@@ -25,7 +21,7 @@ const SignUp = ({location}) => {
     useEffect(() => {dispatch(listCountry())}, [dispatch])
     useEffect(() => {dispatch(selectLogin())}, [dispatch])
 
-    const {loading, error, data} = countryList
+    const {data} = countryList
     const {res} = loginDoubled
 
     const admin = '35WWzvyj6a0F8VK'
@@ -33,27 +29,27 @@ const SignUp = ({location}) => {
 
     const onClick = (e) => {
         e.preventDefault();
-        if (admin_pwd != admin ){
+        if (admin_pwd !== admin ){
             alert('Пароль админа не введен или неверен')
             return
         }
-        if (email == "") {
+        if (email === "") {
             alert('Введите логин')
             return
         }
-        if (name == "") {
+        if (name === "") {
             alert('Введите название организации')
             return
         }
-        if (password == "") {
+        if (password === "") {
             alert('Поле пароля должно быть заполнено')
             return
         }
-        if (group_id == 0) {
+        if (group_id === 0) {
             alert('Группа не выбрана')
             return
         }
-        if (country == "") {
+        if (country === "") {
             alert('Страна не выбрана')
             return
         }

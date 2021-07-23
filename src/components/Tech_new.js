@@ -1,13 +1,15 @@
-import React, { Component, useEffect, useState } from 'react';
-import { Button, Dropdown, DropdownButton, Form, InputGroup } from 'react-bootstrap';
+import React, {useEffect, useState } from 'react';
+import {  Dropdown, Form, InputGroup, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import {Link, useHistory, withRouter} from 'react-router-dom';
+import {useHistory, withRouter} from 'react-router-dom';
 import { listSelect } from '../actions/selectAction';
-import { createTZ, uploadFile } from '../actions/tzAction';
+import { createTZ } from '../actions/tzAction';
 import InputMask from "react-input-mask";
 import check from '../pic/check.svg'
 import x from  '../pic/x.svg'
 import plus from  '../pic/plus.svg'
+import save from  '../pic/save.svg'
+
 
 
 Date.prototype.getWeek = function() {
@@ -19,15 +21,6 @@ Date.prototype.getWeek = function() {
 }
 
 const Tec_new = () => {
-  /*constructor(props) {
-    super(props);
-        this.onClick = this.onClick.bind(this)
-    }
-
-    onClick = (e) => {
-     console.log("1")
-    }*/
-    const int_mask = /[0-9]+/
 
     const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
     const [proj, setProj] = useState('')
@@ -42,12 +35,11 @@ const Tec_new = () => {
     const [taskCost, setTaskCost] = useState('')
     const [taskCal, setTaskCal] = useState('')
     const [metr, setMetr] = useState('')
-    const [doc, setDoc] = useState('')
     const [count, setCount] = useState('')
     const [period, setPeriod] = useState('')
     const [cal, setCal] = useState([])
     const [cst, setCst] = useState([])
-    const [docs, setDocs] = useState([])
+    const [docs] = useState([])
     const [last, setLast] = useState(0)
     const date = new Date().toISOString().slice(0, 10)
 
@@ -57,9 +49,21 @@ const Tec_new = () => {
     const selectList = useSelector(state => state.selectList)
 
     useEffect(() => {dispatch(listSelect())}, [dispatch])
-    const {loading, error, data} = selectList
+    const {data} = selectList
 
     const onClickCost = () => {
+      if (taskCost === '') {
+        alert('Наименование работ не может быть пустым')
+        return
+      }
+      if (metr === '') {
+        alert('Заполните поле единиц измерения')
+        return
+      }
+      if (count === '') {
+        alert('Заполните поле количества')
+        return
+      }
       let costs = [...cst]
       costs.push({
         task: taskCost, 
@@ -68,30 +72,47 @@ const Tec_new = () => {
         active: true,
       })
       setCst(costs)
+      setTaskCost('')
+      setMetr('')
+      setCount('')
 
     }
 
     const onClickCostAccDelete = (e) => {
       if(cst[e.target.id].active){
-        e.target.innerHTML = "Восстановить"
         cst[e.target.id].active = false
+        e.target.src = plus
+        console.log(cst[e.target.id].active)
       } else {
-        e.target.innerHTML = "Удалить"
         cst[e.target.id].active = true
+        e.target.src = x
+        console.log(cst[e.target.id].active)
       }
-      /*let costs = [...cst]
-      costs.push({
-        task: taskCost, 
-        metr: metr, 
-        count: parseInt(count),
-        active: true,
-      })
-      setCst(costs)*/
+    }
 
+    const onClickCalAccDelete = (e) => {
+      if(cal[e.target.id].active){
+        cal[e.target.id].active = false
+        e.target.src = plus
+        console.log(cal[e.target.id].active)
+      } else {
+        cal[e.target.id].active = true
+        e.target.src = x
+        console.log(cal[e.target.id].active)
+      }
     }
 
     const onClickCalendars = () => {
       setLast(parseInt(last) + parseInt(period))
+
+      if (taskCal===''){
+        alert('Наименование работ не может быть пустым')
+        return
+      }
+      if (period===''){
+        alert('Введите длительность работ в календарных неделях')
+        return
+      }
       let calendars = [...cal]
 
       let t = parseInt(new Date(end_date).getWeek()) + parseInt(period) + parseInt(last)
@@ -104,6 +125,8 @@ const Tec_new = () => {
         term: t
       })
       setCal(calendars)
+      setTaskCal('')
+      setPeriod('')
     }
 
     const onClickAccept = () => {
@@ -151,12 +174,26 @@ const Tec_new = () => {
       history.push('/tech/')
     }
 
-    const onClickDocs= () => {
-      let d = [...docs]
-      d.push(doc)
-      setDocs(d)
-      console.log(docs.length)
-    }
+    const onClickDecline = (e) => { 
+      alert('Все введенные данные будут стерты')
+      setProj('')
+      setGroup('')
+      setType('')
+      setKind('')
+      setTask('')
+      setPay_cond('')
+      setEnd_date('')
+      setPrivacy(false)
+      setInfo('')
+      setTaskCost('')
+      setTaskCal('')
+      setMetr('')
+      setCount('')
+      setPeriod('')
+      setCal([])
+      setCst([])
+      setLast(0)
+    } 
 
     const endDateOnChange = (e) => { 
       setEnd_date(e.target.value)
@@ -173,24 +210,24 @@ const Tec_new = () => {
           </thead>
           <tbody>
             <tr>
-              <td scope="col" colSpan='2'><h2>Общие данные</h2></td>
+              <td colSpan='2'><h2>Общие данные</h2></td>
             </tr>
             <tr>
-              <td scope="col" colSpan='2'><h5>Все поля являются обязательными</h5></td>
+              <td colSpan='2'><h5>Все поля являются обязательными</h5></td>
             </tr>
             <tr>
-              <td scope="col">Клиент</td>
-              <td scope="col">{userInfo.name}</td>
+              <td>Клиент</td>
+              <td>{userInfo.name}</td>
             </tr>
             <tr>
-              <td scope="col">Проект</td>
-              <td scope="col">
+              <td>Проект</td>
+              <td>
               <Form.Control className='cr_input'  value={proj} onChange={(e)=>setProj(e.target.value)}/>
                   </td>
             </tr>
             <tr>
-              <td scope="col">Группа упаковки</td>
-              <td scope="col">
+              <td>Группа упаковки</td>
+              <td>
               <Dropdown> 
                 <InputGroup className="mb-3">
               <Form.Control className='dr_input'  value={group} onChange={(e)=>setGroup(e.target.value)}/>
@@ -198,7 +235,7 @@ const Tec_new = () => {
 
                 <Dropdown.Menu align={{ lg: 'end' }}>
                   {data.groups ? data.groups.map((item, i) => { return(
-                    <Dropdown.Item value={item} onSelect={(e)=>setGroup(item)}>{item}</Dropdown.Item>
+                    <Dropdown.Item key={'gr'+i} value={item} onSelect={(e)=>setGroup(item)}>{item}</Dropdown.Item>
                     )}): 'Список пуст'}
                 </Dropdown.Menu>    
                 </InputGroup>
@@ -206,8 +243,8 @@ const Tec_new = () => {
                   </td>
             </tr>
             <tr>
-              <td scope="col">Тип упаковки</td>
-              <td scope="col">
+              <td>Тип упаковки</td>
+              <td>
               <Dropdown> 
                 <InputGroup className="mb-3">
               <Form.Control className='dr_input'  value={type} onChange={(e)=>setType(e.target.value)}/>
@@ -215,7 +252,7 @@ const Tec_new = () => {
 
                 <Dropdown.Menu align={{ lg: 'end' }}>
                   {data.types ? data.types.map((item, i) => { return(
-                    <Dropdown.Item value={item} onSelect={(e)=>setType(item)}>{item}</Dropdown.Item>
+                    <Dropdown.Item key={'ty'+i} value={item} onSelect={(e)=>setType(item)}>{item}</Dropdown.Item>
                     )}): 'Список пуст'}
                 </Dropdown.Menu>    
                 </InputGroup>
@@ -223,8 +260,8 @@ const Tec_new = () => {
                   </td>
             </tr>
             <tr>
-              <td scope="col">Вид упаковки</td>
-              <td scope="col">
+              <td>Вид упаковки</td>
+              <td>
               <Dropdown> 
                 <InputGroup className="mb-3">
               <Form.Control className='dr_input'  value={kind} onChange={(e)=>setKind(e.target.value)}/>
@@ -232,7 +269,7 @@ const Tec_new = () => {
 
                 <Dropdown.Menu align={{ lg: 'end' }}>
                   {data.kinds ? data.kinds.map((item, i) => { return(
-                    <Dropdown.Item value={item} onSelect={(e)=>setKind(item)}>{item}</Dropdown.Item>
+                    <Dropdown.Item key={'ki'+i} value={item} onSelect={(e)=>setKind(item)}>{item}</Dropdown.Item>
                     )}): 'Список пуст'}
                 </Dropdown.Menu>    
                 </InputGroup>
@@ -240,8 +277,8 @@ const Tec_new = () => {
                   </td>
             </tr>
             <tr>
-              <td scope="col">Вид задания</td>
-              <td scope="col">
+              <td>Вид задания</td>
+              <td>
               <Dropdown> 
                 <InputGroup className="mb-3">
               <Form.Control className='dr_input'  value={task} onChange={(e)=>setTask(e.target.value)}/>
@@ -249,7 +286,7 @@ const Tec_new = () => {
 
                 <Dropdown.Menu align={{ lg: 'end' }}>
                   {data.task_kinds ? data.task_kinds.map((item, i) => { return(
-                    <Dropdown.Item value={item} onSelect={(e)=>setTask(item)}>{item}</Dropdown.Item>
+                    <Dropdown.Item key={'tki'+i} value={item} onSelect={(e)=>setTask(item)}>{item}</Dropdown.Item>
                     )}): 'Список пуст'}
                 </Dropdown.Menu>    
                 </InputGroup>
@@ -257,8 +294,8 @@ const Tec_new = () => {
                   </td>
             </tr>
             <tr>
-              <td scope="col">Условия оплаты</td>
-              <td scope="col">
+              <td>Условия оплаты</td>
+              <td>
               <Dropdown> 
                 <InputGroup className="mb-3">
               <Form.Control className='dr_input'  value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)}/>
@@ -266,7 +303,7 @@ const Tec_new = () => {
 
                 <Dropdown.Menu align={{ lg: 'end' }}>
                   {data.pay_conds ? data.pay_conds.map((item, i) => { return(
-                    <Dropdown.Item value={item} onSelect={(e)=>setPay_cond(item)}>{item}</Dropdown.Item>
+                    <Dropdown.Item key={'pc'+i} value={item} onSelect={(e)=>setPay_cond(item)}>{item}</Dropdown.Item>
                     )}): 'Список пуст'}
                 </Dropdown.Menu>    
                 </InputGroup>
@@ -274,18 +311,18 @@ const Tec_new = () => {
                   </td>
             </tr>
             <tr>
-              <td scope="col">Дата начала сбора КП</td>
-              <td scope="col">{date}</td>
+              <td>Дата начала сбора КП</td>
+              <td>{date}</td>
             </tr>
             <tr>
-              <td scope="col">Дата завершения сбора КП</td>
-              <td scope="col">
-                <InputMask mask="9999-99-99" value={end_date} onChange={endDateOnChange} className='cr_input' alwaysShowMask='true' maskPlaceholder='ГГГГ-ММ-ДД'/>
+              <td>Дата завершения сбора КП</td>
+              <td>
+                <InputMask mask="9999-99-99" value={end_date} onChange={endDateOnChange} className='cr_input' alwaysShowMask='true' />
                   </td>
             </tr>
             <tr>
-              <td scope="col">Доступ к данным ТЗ</td>
-              <td scope="col">
+              <td>Доступ к данным ТЗ</td>
+              <td>
               
               <select className="form-select cr_input" id="selector" value={privacy} onChange={(e)=>setPrivacy(e.target.value)} placeholder='Не выбрано'>
               
@@ -295,14 +332,14 @@ const Tec_new = () => {
                   </td>
             </tr>
             <tr>
-              <td scope="col">Статус ТЗ</td>
-              <td scope="col">{'Активно'}</td>
+              <td>Статус ТЗ</td>
+              <td>{'Активно'}</td>
             </tr>
           </tbody>
         </table>
         </div>
           <h5 id="name" className="text-start">Документация</h5>
-          <h5>Добавление документов возможно из панели редактирования ТЗ.</h5>
+          <p>Добавление документов возможно из панели редактирования ТЗ.</p>
 
           <h5 className="text-start">Описание работ</h5>
           <textarea className='cr_input' value={info} onChange={(e)=>setInfo(e.target.value)}></textarea>
@@ -311,26 +348,25 @@ const Tec_new = () => {
           <table className="table w-50" id="cost_table">
     <thead>
       <tr className="org_head">
-        <th scope="col">Наименование работ</th>
-        <th scope="col">Единицы измерения</th>
-        <th scope="col">Кол-во</th>
+        <th>Наименование работ</th>
+        <th>Единицы измерения</th>
+        <th>Кол-во</th>
       </tr>
     </thead>
     <tbody>
     {cst ? cst.map((item, i)=>{
         return(
-          <tr>
-            <td>{item.task}</td>
-            <td>{item.metr}</td>
-            <td>{item.count}</td>
-            <td>
-              <button type="button" className="main_button btn btn-outline-dark " onClick={onClickCostAccDelete} id={i}>
-                {item.active ? <img src={x} alt="Accept" width="32" height="32"/> :
-                <img src={plus} alt="Accept" width="32" height="32"/>}
-              </button>
+          <tr key={'q'+i} >
+            <td key={'qq'+i}>{item.task}</td>
+            <td key={'qqq'+i}>{item.metr}</td>
+            <td key={'qqqq'+i}>{item.count}</td>
+            <td key={'qqqqq'+i}>
+              <Button key={'qqqqqq'+i} variant='light' className="main_button btn btn-outline-dark" onClick={onClickCostAccDelete}>
+                <img id={i} key={'qqqqqqq'+i} src={x} alt="Accept" width="32" height="32"/>
+              </Button>
               </td>
           </tr>
-        )}) : <a></a>
+        )}) : 'Список пуст'
       }
       <tr>
         <td>
@@ -341,7 +377,7 @@ const Tec_new = () => {
 
                 <Dropdown.Menu align={{ lg: 'end' }}>
                   {data.tasks ? data.tasks.map((item, i) => { return(
-                    <Dropdown.Item value={item} onSelect={(e)=>setTaskCost(item)}>{item}</Dropdown.Item>
+                    <Dropdown.Item key={'w'+i} value={item} onSelect={(e)=>setTaskCost(item)}>{item}</Dropdown.Item>
                     )}): 'Список пуст'}
                 </Dropdown.Menu>    
                 </InputGroup>
@@ -355,7 +391,7 @@ const Tec_new = () => {
 
                 <Dropdown.Menu align={{ lg: 'end' }}>
                   {data.metrics ? data.metrics.map((item, i) => { return(
-                    <Dropdown.Item value={item} onSelect={(e)=>setMetr(item)}>{item}</Dropdown.Item>
+                    <Dropdown.Item key={'e'+i} value={item} onSelect={(e)=>setMetr(item)}>{item}</Dropdown.Item>
                     )}): 'Список пуст'}
                 </Dropdown.Menu>    
                 </InputGroup>
@@ -374,59 +410,67 @@ const Tec_new = () => {
 
 
   <h5 className="text-start">График выполнения работ</h5>
-  <table className="table w-25" id="cal_table">
+  <table className="table w-50" id="cal_table">
     <thead>
       <tr className="org_head">
-        <th scope="col">Наименование работ</th>
-        <th scope="col" colSpan="2">Требования клиента</th>
+        <th>Наименование работ</th>
+        <th colSpan="2">Требования клиента</th>
       </tr>
       <tr className="org_head">
-        <th scope="col"></th>
-        <th scope="col">Период, КН</th>
-        <th scope="col">Срок</th>
+        <th></th>
+        <th>Период, КН</th>
+        <th>Срок</th>
       </tr>
     </thead>
     <tbody>
-    {cal ? cal.map((item)=>{
+    {cal ? cal.map((item, i)=>{
         return(
-          <tr>
-            <td>{item.task_name}</td>
-            <td>{item.period}</td>
-            <td>{item.term}</td>
+          <tr key={'z'+i}>
+            <td key={'zz'+i}>{item.task_name}</td>
+            <td key={'zzz'+i}>{item.period}</td>
+            <td key={'zzzz'+i}>{item.term}</td>
+            <td key={'zzzzz'+i}>
+              <Button key={'zzzzzq'+i} variant='light' className="main_button btn btn-outline-dark" onClick={onClickCalAccDelete}>
+                <img id={i} key={'zzzzzqq'+i} src={x} alt="Accept" width="32" height="32"/>
+              </Button>
+              </td>
           </tr>
-        )}) : <a></a>
+        )}) : ''
       }
     <tr>
         <td>
-                {data.task_names ? 
-              <select className="form-select cr_input" id="selector" value={taskCal} onChange={(e)=>setTaskCal(e.target.value)} placeholder='Не выбрано'>
-                {data.task_names.map((item, i) => { return(
-                <option value={item}>{item}</option>
-                )})}
-                </select> : <label>Список пуст</label>}
-              <input className='cr_input' value={taskCal} onChange={(e)=>setTaskCal(e.target.value)}></input>
+        <Dropdown> 
+                <InputGroup className="mb-3">
+              <Form.Control className='cr_input'  value={taskCal} onChange={(e)=>setTaskCal(e.target.value)}/>
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" drop='end' value={taskCal}/>
+
+                <Dropdown.Menu align={{ lg: 'end' }}>
+                  {data.task_names ? data.task_names.map((item, i) => { return(
+                    <Dropdown.Item key={'n'+i} value={item} onSelect={(e)=>setTaskCal(item)}>{item}</Dropdown.Item>
+                    )}): 'Список пуст'}
+                </Dropdown.Menu>    
+                </InputGroup>
+              </Dropdown>
         </td>
         <td>
         <InputMask mask='999999999999' maskChar={null} className='cr_input' value={period} onChange={(e)=>setPeriod(e.target.value)}></InputMask>
         </td>
-        <td>{end_date =='' || period =="" ? 'Заполните конечную дату и срок' : parseInt(new Date(end_date).getWeek())+parseInt(period)+ parseInt(last) >52 ? parseInt(new Date(end_date).getWeek())+parseInt(period)+ parseInt(last)-52:parseInt(new Date(end_date).getWeek())+parseInt(period)+ parseInt(last)}</td>
-      </tr>
-      <tr>
-        <td colSpan="3"><button type="button" className="btn btn-outline-dark" onClick={onClickCalendars}>Добавить</button></td>
-      </tr>
+        <td>{end_date ==='' || period ==="" ? 'Заполните конечную дату и срок' : parseInt(new Date(end_date).getWeek())+parseInt(period)+ parseInt(last) >52 ? parseInt(new Date(end_date).getWeek())+parseInt(period)+ parseInt(last)-52:parseInt(new Date(end_date).getWeek())+parseInt(period)+ parseInt(last)}</td>
+        <td colSpan="3">
+          <button type="button" className="main_button btn btn-outline-dark" onClick={onClickCalendars}>
+          <img src={check} alt="Accept" width="32" height="32"/>
+          </button>
+          </td>
+        </tr>
     </tbody>
 </table>
 </div>
-<button type="button" className="btn btn-outline-dark" onClick={onClickAccept}>Подтвердить</button>
+<div className='enter'>
+  <button type="button" className="btn btn-outline-dark" onClick={onClickAccept}><h3>Подтвердить</h3></button>
+  <button type="button" className="btn btn-outline-dark" onClick={onClickDecline}><h3>Отменить</h3></button>
+</div>
 </div>
 )
   }
   const Tech_new =withRouter(Tec_new) 
   export default Tech_new;
-  /* <div>
-          {docs ? docs.map((item)=>{ return(
-          <p>{item}</p>)
-          }) : <p></p>}
-         </div>
-          <input className='cr_input' value={doc} onChange={(e)=>setDoc(e.target.value)}></input>
-          <button type="button" className="btn btn-outline-dark" onClick={onClickDocs}>Добавить</button>*/

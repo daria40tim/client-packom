@@ -1,6 +1,5 @@
 import { ORG_FAIL, ORG_LIST_FAIL, ORG_LIST_REQUEST, ORG_LIST_SORTEDBY_NAME, ORG_LIST_SUCCESS, ORG_REQUEST, ORG_SUCCESS, ORG_UPDATE_REQUEST, ORG_UPDATE_FAIL, ORG_UPDATE_SUCCESS, ADD_ORG_REQUEST, ADD_ORG_SUCCESS, ADD_ORG_FAIL, ORG_LIST_SORTEDBY_SPEC, ORG_LIST_SORTEDBY_COUNTRY, ORG_LIST_SORTEDBY_GROUP, ADD_ORG_DOC_REQUEST, ADD_ORG_DOC_SUCCESS, ADD_ORG_DOC_FAIL, DOWN_ORG_DOC_REQUEST, DOWN_ORG_DOC_SUCCESS, DOWN_ORG_DOC_FAIL, DEL_TRUSTED_ORG_REQUEST, DEL_TRUSTED_ORG_SUCCESS, DEL_TRUSTED_ORG_FAIL, GET_ORG_FILTER_DATA_REQUEST, GET_ORG_FILTER_DATA_SUCCESS, GET_ORG_FILTER_DATA_FAIL } from '../constants/orgConstants'
 import axios from 'axios'
-import { useSelector } from 'react-redux'
 
 export const listOrg = (names, groups, specs, countries) => async(dispatch) => {
   try {
@@ -110,7 +109,7 @@ export const listOrgDetailsUpdate = (adress, phone, email, site, spec, password,
       mode: 'cors'
   }
 
-    const { data } = await axios.put(`http://127.0.0.1:8000/api/orgs/`, {adress, phone, email, site, spec, password, info, history}, config)
+    await axios.put(`http://127.0.0.1:8000/api/orgs/`, {adress, phone, email, site, spec, password, info, history}, config)
 
     dispatch({
       type: ORG_UPDATE_SUCCESS,
@@ -139,7 +138,7 @@ export const listOrgAdd = (id) => async(dispatch) => {
       mode: 'cors'
   }
 
-    const { data } = await axios.put(`http://127.0.0.1:8000/api/orgs/${id}`,{}, config)
+    await axios.put(`http://127.0.0.1:8000/api/orgs/${id}`,{}, config)
 
     dispatch({
       type: ADD_ORG_SUCCESS,
@@ -290,7 +289,7 @@ export const listOrgDownDoc = (name, o_id) => async(dispatch) => {
       responseType: 'blob'
   }
 
-    const response = await axios.get(`http://127.0.0.1:8000/api/orgs/doc/${name}/${o_id}`, config)
+    await axios.get(`http://127.0.0.1:8000/api/orgs/doc/${name}/${o_id}`, config)
     .then(({ data }) => {
       const downloadUrl = window.URL.createObjectURL(new Blob([data]));
       const link = document.createElement('a');

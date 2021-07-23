@@ -1,28 +1,24 @@
-import React, { Component, useEffect, useState } from 'react';
-import {Accordion, Button, Collapse, Form, FormControl, FormLabel, InputGroup} from 'react-bootstrap';
+import React, {useEffect, useState } from 'react';
+import {Form} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { listOrg, orgFilterData, sortOrgsByGroup } from '../actions/orgAction';
+import { listOrg, orgFilterData} from '../actions/orgAction';
 
 
 
 const  Filters = () => {
-  const [open, setOpen] = useState(false);
   const [s_groups, setSGroups] = useState([])
   const [specs, setSpecs] = useState([])
   const [countries, setCountries] = useState([])
   const [names, setNames] = useState([])
-  const [orgs, setOrgs] = useState([])
 
   const dispatch = useDispatch()
-  const orgList = useSelector(state => state.orgList)
-
-
+  
   const filterData = useSelector(state => state.orgFilterData)
 
   useEffect(() => {dispatch(orgFilterData())}, [dispatch])
   const groups = [ {id: 1, name:'Клиент'}, {id: 2, name:'Поставщик'}, {id: 3, name:'Клиент, поставщик'} ]
 
-  const {loading, error, data} = filterData
+  const {data} = filterData
 
   const onClick = (e) => {
     console.log(names[0])
@@ -91,7 +87,7 @@ const  Filters = () => {
 <div className="accordion" id="accordionPanelsStayOpenExample">
   <div className="accordion-item">
     <h2 className="accordion-header" id="panelsStayOpen-headingOne">
-      <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+      <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
         Название
       </button>
     </h2>
@@ -107,7 +103,7 @@ const  Filters = () => {
     </div>
     <div className="accordion-item">
     <h2 className="accordion-header" id="panelsStayOpen-headingTwo">
-      <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseTwo">
+      <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
         Группа
       </button>
     </h2>
@@ -123,7 +119,7 @@ const  Filters = () => {
     </div>
     <div className="accordion-item">
     <h2 className="accordion-header" id="panelsStayOpen-headingThree">
-      <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="true" aria-controls="panelsStayOpen-collapseThree">
+      <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
         Специализация
       </button>
     </h2>
@@ -139,7 +135,7 @@ const  Filters = () => {
     </div>
     <div className="accordion-item">
     <h2 className="accordion-header" id="panelsStayOpen-headingFour">
-      <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="true" aria-controls="panelsStayOpen-collapseFour">
+      <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false" aria-controls="panelsStayOpen-collapseFour">
         Страна
       </button>
     </h2>

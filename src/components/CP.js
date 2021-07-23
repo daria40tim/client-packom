@@ -1,56 +1,10 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {Link, useHistory, withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import { listCPs, sortCPByDate, sortCPById, sortCPByOrg, sortCPByTzId } from '../actions/cpAction';
 import Filters from './Filters';
 import Loader from './Loader';
 import Message from './Message';
-
-let specs = ['Уп. материалы', 'Металлоконтейнеры']
-
-let data = [
-    {
-        'cp_id': '12675', 
-        'date': '12.01.2021', 
-        'cp_st': 'Отклонено', 
-        'tz_id':'2423', 
-        'proj': 'ГК 6040', 
-        'o_id': 'Организация 1', 
-        'price': '170 руб.', 
-        'group': 'Гофрокороб',
-        'type': 'Одноразовая',
-        'kind': 'Стандартная',
-        'task':'Изготовление серии'
-    },
-    {
-        'cp_id': '12632', 
-        'date': '14.01.2021', 
-        'cp_st': 'Активно', 
-        'tz_id':'7868', 
-        'proj': 'ГК 6040', 
-        'o_id': 'Организация 3', 
-        'price': '170 руб.', 
-        'group': 'Гофрокороб',
-        'type': 'Одноразовая',
-        'kind': 'Стандартная',
-        'task':'Изготовление серии'
-    },
-    {
-        'cp_id': '11789', 
-        'date': '12.01.2021', 
-        'cp_st': 'Активно', 
-        'tz_id':'7868', 
-        'proj': 'ГК 6040', 
-        'o_id': 'Организация 5', 
-        'price': '220 руб.', 
-        'group': 'Гофрокороб',
-        'type': 'Одноразовая',
-        'kind': 'Стандартная',
-        'task':'Изготовление серии'
-    },
-]
-
-let stats = ['Активно', 'Архив', 'Отклонено', 'Принято'] 
 
 const C = () => {
  
@@ -108,40 +62,40 @@ const C = () => {
     <table className="table main_t">
     <thead>
       <tr className="org_head">
-      <th scope="col">
+      <th>
           <label>Номер КП</label>
           <button onClick={onClickCPId} type="button" className="btn sort_btn"><svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-caret-down-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path d={cp_idFlag ? "M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" :"M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"}/>
 </svg></button>
           </th>
-        <th scope="col">
+        <th>
           <label>Дата КП</label>
           <button onClick={onClickDate} type="button" className="btn sort_btn"><svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-caret-down-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path d={dateFlag ? "M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" :"M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"}/>
 </svg></button>
           </th>
-        <th scope="col">
+        <th>
           <p>Статус КП</p>
           </th>
-          <th scope="col">
+          <th>
           <label>Номер ТЗ</label>
           <button onClick={onClickTZId} type="button" className="btn sort_btn"><svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-caret-down-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path d={tz_idFlag ? "M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" :"M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"}/>
 </svg></button>
           </th>
-          <th scope="col">
+          <th>
           <p>Проект</p>
           </th>
-        <th scope="col">
+        <th>
             <label>Поставщик</label>
             <button onClick={onClickOrg} type="button" className="btn sort_btn"><svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-caret-down-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path d={o_idFlag ? "M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" :"M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"}/>
 </svg></button>
             </th>
-        <th scope="col">Группа упаковки</th>
-        <th scope="col">Тип упаковки</th>
-        <th scope="col">Вид упаковки</th>
-        <th scope="col">Вид задания</th>
+        <th>Группа упаковки</th>
+        <th>Тип упаковки</th>
+        <th>Вид упаковки</th>
+        <th>Вид задания</th>
       </tr>
     </thead>
     <tbody>

@@ -1,76 +1,15 @@
-import axios from 'axios';
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link, useHistory} from 'react-router-dom';
 import { listTechs, sortTechsByClient, sortTechsByDate, sortTechsByStatus, sortTechsByTzId, sortTechsByEndDate } from '../actions/tzAction';
 import '../index.css'
-import { selectListReducer } from '../reducers/selectReducer';
 import Filters from './Filters';
 import Loader from './Loader';
 import Message from './Message';
 
-let stats = ['Активно', 'Архив']
-let cp = ['Активно', 'Архив', 'Отклонено', 'Принято']
-let optios = ['Номер ТЗ', 'Дата ТЗ', 'Клиент', 'Дата завершения', 'Статус ТЗ']
-
 
 
 const  Techs = () =>  {
- /* constructor(props) {
-    super(props);
-        this.state = {
-          data: data, 
-          dateFlag: true, 
-          idFlagF: true,
-          clientFlag: true, 
-          end_dateFlag: true,
-          tz_stFlag: true,
-          cp_stFlag: true,
-          filterData: this.props.filterData,
-          fname: '', 
-          fgroup: '', 
-          fcountry: '', 
-          fspec: []
-        };
-  
-        this.onClickClient = this.onClickClient.bind(this)
-        this.onClickCommStat = this.onClickCommStat.bind(this)
-        this.onClickDate = this.onClickDate.bind(this)
-        this.onClickEndDate = this.onClickEndDate.bind(this)
-        this.onClickId = this.onClickId.bind(this)
-        this.onClickTZStat = this.onClickTZStat.bind(this)
-        this.onClick = this.onClick.bind(this)
-    }*/
-
-
-
-    /*onClick(e){
-      e.preventDefault();
-
-      let name = document.getElementById('name_select').value
-      
-      let group = ""
-      if (document.getElementById('gridRadios1').checked) group = 'Поставщик'
-      if (document.getElementById('gridRadios2').checked) group = 'Клиент'
-      if (document.getElementById('gridRadios3').checked) group = 'Клиент, поставщик'
-      
-      let country = document.getElementById('country_select').value
-
-      let spec = []
-      for (let i=0; i<specs.length;i++) {
-        if  (document.getElementById(i).checked) spec.push(document.getElementById(i).value)
-      }
-      
-
-      this.setState({
-        fname: name, 
-        fgroup: group, 
-        fcountry: country, 
-        fspec: spec,
-      })
-
-      this.props.handler(name)
-    }*/
 
   const onClickDate = () => {
     dispatch(sortTechsByDate(data.techs, dateFlag))
@@ -138,7 +77,7 @@ const  Techs = () =>  {
 
 <td align='justify' valign="top">
       <div className='list'> 
-      {userInfo.group_id == "1" || userInfo.group_id == "3" ? 
+      {userInfo.group_id === "1" || userInfo.group_id === "3" ? 
   <button type="button" className="btn btn-outline-dark m-2" onClick={onClickTZ}>
     Добавить ТЗ
     </button> :''} 
@@ -204,16 +143,16 @@ const  Techs = () =>  {
         <td>{item.client}</td>
         <td>{new Date(item.end_date).toISOString().slice(0, 10)}</td>
         <td>{Date.parse(item.end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
-        <td>{userInfo.group_id == 1 || userInfo.o_id == item.o_id ? '-'
+        <td>{userInfo.group_id === 1 || userInfo.o_id === item.o_id ? '-'
         : !data.cps ? 'Не подано'
-        : data.cps.find(value => {return value.tz_id == item.tz_id}) ? 'Подано' : 'Не подано'}
+        : data.cps.find(value => {return value.tz_id === item.tz_id}) ? 'Подано' : 'Не подано'}
         </td>
         <td>{item.proj}</td>
         <td>{item.group}</td>
         <td>{item.type}</td>
         <td>{item.kind}</td>
         <td>{item.task}</td>
-        <td>{item.selected_cp != 0 ? 'Принят' : !item.active ? 'Отменен' : Date.parse(item.end_date)> Date.now() ? 'Сбор КП' : 'Ожидает решения'}</td>
+        <td>{item.selected_cp !== 0 ? 'Принят' : !item.active ? 'Отменен' : Date.parse(item.end_date)> Date.now() ? 'Сбор КП' : 'Ожидает решения'}</td>
         <td>{item.count}</td>
         
       </tr>)}):<h5>Нет ТЗ</h5>}

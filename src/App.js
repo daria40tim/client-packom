@@ -1,5 +1,5 @@
 import './App.css';
-import React, {Component} from 'react';
+import React from 'react';
 import Orgs from './components/Orgs'
 import Header from './components/Header'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,17 +13,16 @@ import Tenders from './components/Tenders';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Tech from './components/Tech';
-import CP_New from './components/CP_new';
+import CP_NEW from './components/CP_new';
 import Tender from './components/Tender';
-import Org_upd from './components/Org_upd';
-import Tech_new from './components/Tech_new';
-import Tech_upd from './components/Tech_upd';
-import CP_One from './components/CP_one';
-import CP_Upd from './components/CP_upd';
+import ORG_UPD from './components/Org_upd';
+import TECH_NEW from './components/Tech_new';
+import TECH_UPD from './components/Tech_upd';
+import CP_ONE from './components/CP_one';
+import CP_UPD from './components/CP_upd';
 
 const  App = () => {
   const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
-  const admin = localStorage.getItem('admin')
 
   return (
     <BrowserRouter>
@@ -54,7 +53,7 @@ const  App = () => {
             </Route>
             <Route exact path="/cps/link/:cp_id">
           
-          <CP_One/>
+          <CP_ONE/>
             </Route>
             <Route exact path="/tenders/link/:tender_id">
           
@@ -62,7 +61,7 @@ const  App = () => {
             </Route>
             <Route exact path='/orgs/upd/:o_id'>
             
-            <Org_upd/>
+            <ORG_UPD/>
             </Route>
             <Route exact path="/techs/link/:tz_id">
           
@@ -70,19 +69,19 @@ const  App = () => {
             </Route>
             <Route exact path="/techs/create">
             
-          <Tech_new/>
+          <TECH_NEW/>
             </Route>
             <Route exact path="/cps/create/:tz_id">
             
-          <CP_New/>
+          <CP_NEW/>
             </Route>
             <Route exact path="/techs/upd/:tz_id">
             
-          <Tech_upd/>
+          <TECH_UPD/>
             </Route>
             <Route exact path="/cps/upd/:cp_id">
             
-          <CP_Upd/>
+          <CP_UPD/>
             </Route>
             </div>:
             <div>

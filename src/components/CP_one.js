@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react';
+import React, {useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link, useHistory, withRouter} from 'react-router-dom';
 import { listCPDetails, listCpDownDoc } from '../actions/cpAction';
@@ -22,7 +22,7 @@ const One_CP = ({match}) =>  {
   const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
 
   const cpDetails = useSelector(state => state.cpDetails)
-  const {loading, error, cp} = cpDetails
+  const {cp} = cpDetails
 
   const onClickDownload = (e) => {
     console.log(e.target.id)
@@ -34,7 +34,7 @@ const One_CP = ({match}) =>  {
     dispatch(listCPDetails(match.params.cp_id))
   }, [dispatch, match])
 
-    const onClickChange = (e) => {
+    const onClickChange = () => {
      history.push(`/cps/upd/${cp.cp_id}`)
     }
 
@@ -53,79 +53,79 @@ const One_CP = ({match}) =>  {
           </thead>
           <tbody>
             <tr>
-              <td scope="col" colSpan='2'><h5>Общие данные по ТЗ</h5></td>
+              <td  colSpan='2'><h5>Общие данные по ТЗ</h5></td>
             </tr>
             <tr>
-              <td scope="col">Клиент</td>
-              <td scope="col">
+              <td >Клиент</td>
+              <td >
               { cp ? <Link to={`/orgs/link/${cp.tz_o_id}`} >
                   {cp.client}
                 </Link> : <p></p>}
                   </td>
             </tr>
             <tr>
-              <td scope="col">Проект</td>
-              <td scope="col">{cp ? cp.proj:''}</td>
+              <td >Проект</td>
+              <td >{cp ? cp.proj:''}</td>
             </tr>
             <tr>
-              <td scope="col">Группа упаковки</td>
-              <td scope="col">{cp ? cp.group : ''}</td>
+              <td >Группа упаковки</td>
+              <td >{cp ? cp.group : ''}</td>
             </tr>
             <tr>
-              <td scope="col">Тип упаковки</td>
-              <td scope="col">{cp ? cp.type: ''}</td>
+              <td >Тип упаковки</td>
+              <td >{cp ? cp.type: ''}</td>
             </tr>
             <tr>
-              <td scope="col">Вид упаковки</td>
-              <td scope="col">{cp.kind}</td>
+              <td >Вид упаковки</td>
+              <td >{cp.kind}</td>
             </tr>
             <tr>
-              <td scope="col">Вид задания</td>
-              <td scope="col">{cp.task_name}</td>
+              <td >Вид задания</td>
+              <td >{cp.task_name}</td>
             </tr>
             <tr>
-              <td scope="col">Условия оплаты</td>
-              <td scope="col">{cp.tz_pay_cond}</td>
+              <td >Условия оплаты</td>
+              <td >{cp.tz_pay_cond}</td>
             </tr>
             <tr>
-              <td scope="col">Дата начала сбора КП</td>
-              <td scope="col">{cp.tz_date ? cp.tz_date.slice(0,10):''}</td>
+              <td >Дата начала сбора КП</td>
+              <td >{cp.tz_date ? cp.tz_date.slice(0,10):''}</td>
             </tr>
             <tr>
-              <td scope="col">Дата завершения сбора КП</td>
-              <td scope="col">{cp.tz_end_date ? cp.tz_end_date.slice(0,10):''}</td>
+              <td >Дата завершения сбора КП</td>
+              <td >{cp.tz_end_date ? cp.tz_end_date.slice(0,10):''}</td>
             </tr>
             <tr>
-              <td scope="col">Доступ к данным ТЗ</td>
-              <td scope="col">{cp.privacy}</td>
+              <td >Доступ к данным ТЗ</td>
+              <td >{cp.privacy}</td>
             </tr>
             <tr>
-              <td scope="col">Номер ТЗ</td>
-              <td scope="col">
+              <td >Номер ТЗ</td>
+              <td >
               <Link to={`/techs/link/${cp.tz_id}`} >
                   {cp.tz_id}
                   </Link>
                   </td>
             </tr>
             <tr>
-              <td scope="col">Статус ТЗ</td>
-              <td scope="col">{Date.parse(cp.tz_end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
+              <td >Статус ТЗ</td>
+              <td >{Date.parse(cp.tz_end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2">
+              <td  colSpan="2">
                   <h5>Описание работ по ТЗ</h5>
             </td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2">{cp.tz_info}</td>
+              <td  colSpan="2">{cp.tz_info}</td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2">
+              <td  colSpan="2">
                   <h5>Документация ТЗ</h5>
                   </td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2">{cp.tz_docs ? cp.tz_docs.map((item, i)=>{
+              <td  colSpan="2">{cp.tz_docs ? cp.tz_docs.map((item, i)=>{
         return (
           <p className="text-start">{item}</p>
        )}) : <p className="text-start">Документов нет</p>}
@@ -145,43 +145,43 @@ const One_CP = ({match}) =>  {
           </thead>
           <tbody>
             <tr>
-              <td scope="col" colSpan='2'><h5>Общие данные от поставщика</h5></td>
+              <td  colSpan='2'><h5>Общие данные от поставщика</h5></td>
             </tr>
             <tr>
-              <td scope="col">Поставщик</td>
-              <td scope="col">
+              <td >Поставщик</td>
+              <td >
               <Link to={`/orgs/link/${cp.o_id}`} >
                   {cp.org}
                 </Link>
             </td>
             </tr>
             <tr>
-              <td scope="col">Условия оплаты</td>
-              <td scope="col">{cp.pay_cond}</td>
+              <td >Условия оплаты</td>
+              <td >{cp.pay_cond}</td>
             </tr>
             <tr>
-              <td scope="col">Дата предоставления КП</td>
-              <td scope="col">{cp.date ? cp.date.slice(0,10):''}</td>
+              <td >Дата предоставления КП</td>
+              <td >{cp.date ? cp.date.slice(0,10):''}</td>
             </tr>
             <tr>
-              <td scope="col">Срок действия КП</td>
-              <td scope="col">{cp.end_date ? cp.end_date.slice(0,10):''}</td>
+              <td >Срок действия КП</td>
+              <td >{cp.end_date ? cp.end_date.slice(0,10):''}</td>
             </tr>
             <tr>
-              <td scope="col">Статус КП</td>
-              <td scope="col">{Date.parse(cp.end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
+              <td >Статус КП</td>
+              <td >{Date.parse(cp.end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2"><h5>Описание работ от поставщика</h5></td>
+              <td  colSpan="2"><h5>Описание работ от поставщика</h5></td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2">{cp.info}</td>
+              <td  colSpan="2">{cp.info}</td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2"><h5>Документация от поставщика</h5></td>
+              <td  colSpan="2"><h5>Документация от поставщика</h5></td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2"> {cp.docs ? cp.docs.map((item, i)=>{
+              <td  colSpan="2"> {cp.docs ? cp.docs.map((item, i)=>{
         return (
           <button className="btn" onClick={onClickDownload} id={i}>{item}</button>
        )}) : <p className="text-start">Документов нет</p>}
@@ -195,7 +195,7 @@ const One_CP = ({match}) =>  {
         </table>
         </div>
          
-         {userInfo.o_id == cp.o_id ?
+         {userInfo.o_id === cp.o_id ?
           <button type="button" className="btn btn-outline-dark" onClick={onClickChange}>Изменить</button> :
           <div></div>}
 
@@ -208,12 +208,12 @@ const One_CP = ({match}) =>  {
           <table className="table" id="org_table">
     <thead>
       <tr className="org_head">
-        <th scope="col">Наименование работ</th>
-        <th scope="col">Единицы измерения</th>
-        <th scope="col">Кол-во</th>
-        <th scope="col">Цена б/НДС/ед.</th>
-        <th scope="col">Итого б/НДС</th>
-        <th scope="col">Комментарий</th>
+        <th >Наименование работ</th>
+        <th >Единицы измерения</th>
+        <th >Кол-во</th>
+        <th >Цена б/НДС/ед.</th>
+        <th >Итого б/НДС</th>
+        <th >Комментарий</th>
       </tr>
     </thead>
     <tbody>
@@ -245,16 +245,16 @@ const One_CP = ({match}) =>  {
           <table className="table" id="org_table">
     <thead>
     <tr className="org_head">
-        <th scope="col">Наименование работ</th>
-        <th scope="col" colSpan="2">Требования клиента</th>
-        <th scope="col" colSpan="2">Предложение поставщика</th>
+        <th >Наименование работ</th>
+        <th  colSpan="2">Требования клиента</th>
+        <th  colSpan="2">Предложение поставщика</th>
       </tr>
       <tr className="org_head">
-        <th scope="col"></th>
-        <th scope="col">Период, КН</th>
-        <th scope="col">Срок</th>
-        <th scope="col">Период, КН</th>
-        <th scope="col">Срок</th>
+        <th ></th>
+        <th >Период, КН</th>
+        <th >Срок</th>
+        <th >Период, КН</th>
+        <th >Срок</th>
       </tr>
     </thead>
     <tbody>

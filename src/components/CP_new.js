@@ -1,8 +1,8 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link, useHistory, withRouter} from 'react-router-dom';
-import { createCP, listCPDetails } from '../actions/cpAction';
-import { createTZ, listTechDetails } from '../actions/tzAction';
+import { createCP } from '../actions/cpAction';
+import { listTechDetails } from '../actions/tzAction';
 
 
 Date.prototype.getWeek = function() {
@@ -19,8 +19,7 @@ const One_CP = ({match}) =>  {
     const [info, setInfo] = useState('')
     const [cst, setCst] = useState([])
     const [cal, setCal] = useState([])
-    const [docs, setDocs] = useState([])
-    const [doc, setDoc] = useState('')
+    const [docs] = useState([])
   let tz_last = 0
   let last = 0
   let c = []
@@ -31,18 +30,12 @@ const One_CP = ({match}) =>  {
   const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
 
   const tzDetails = useSelector(state => state.tzDetails)
-  const {loading, error, tech} = tzDetails
+  const {tech} = tzDetails
   const date = new Date().toISOString().slice(0, 10)
 
   useEffect(() => {
     dispatch(listTechDetails(match.params.tz_id))
   }, [dispatch])
-
-  const onClickDocs= (e) => {
-    let costs = [...docs]
-    costs.push(doc)
-    setDocs(costs)
-  }
 
 const onClickCst = (e) => {
     tech.cst.forEach(element => {
@@ -92,7 +85,7 @@ const onClickCal = (e) => {
 
 const history = useHistory()
 
-const onClickAccept = (e) => {
+const onClickAccept = () => {
     dispatch(createCP(parseInt(match.params.tz_id), pay_cond, end_date, info, cal, cst, date, docs, tech.proj))
     history.push('/commertial')
 }
@@ -112,81 +105,81 @@ const onClickAccept = (e) => {
           </thead>
           <tbody>
             <tr>
-              <td scope="col" colSpan='2'><h5>Общие данные по ТЗ</h5></td>
+              <td colSpan='2'><h5>Общие данные по ТЗ</h5></td>
             </tr>
             <tr>
-              <td scope="col">Клиент</td>
-              <td scope="col">
+              <td>Клиент</td>
+              <td>
               <Link to={`/orgs/link/${tech.o_id}`} >
                   {tech.client}
                 </Link>
                   </td>
             </tr>
             <tr>
-              <td scope="col">Проект</td>
-              <td scope="col">{tech.proj}</td>
+              <td>Проект</td>
+              <td>{tech.proj}</td>
             </tr>
             <tr>
-              <td scope="col">Группа упаковки</td>
-              <td scope="col">{tech.group}</td>
+              <td>Группа упаковки</td>
+              <td>{tech.group}</td>
             </tr>
             <tr>
-              <td scope="col">Тип упаковки</td>
-              <td scope="col">{tech.type}</td>
+              <td>Тип упаковки</td>
+              <td>{tech.type}</td>
             </tr>
             <tr>
-              <td scope="col">Вид упаковки</td>
-              <td scope="col">{tech.kind}</td>
+              <td>Вид упаковки</td>
+              <td>{tech.kind}</td>
             </tr>
             <tr>
-              <td scope="col">Вид задания</td>
-              <td scope="col">{tech.task}</td>
+              <td>Вид задания</td>
+              <td>{tech.task}</td>
             </tr>
             <tr>
-              <td scope="col">Условия оплаты</td>
-              <td scope="col">{tech.pay_cond}</td>
+              <td>Условия оплаты</td>
+              <td>{tech.pay_cond}</td>
             </tr>
             <tr>
-              <td scope="col">Дата начала сбора КП</td>
-              <td scope="col">{tech.date}</td>
+              <td>Дата начала сбора КП</td>
+              <td>{tech.date}</td>
             </tr>
             <tr>
-              <td scope="col">Дата завершения сбора КП</td>
-              <td scope="col">{tech.end_date}</td>
+              <td>Дата завершения сбора КП</td>
+              <td>{tech.end_date}</td>
             </tr>
             <tr>
-              <td scope="col">Доступ к данным ТЗ</td>
-              <td scope="col">{tech.privacy=="false" ? 'Общий' : 'Закрытый'}</td>
+              <td>Доступ к данным ТЗ</td>
+              <td>{tech.privacy==="false" ? 'Общий' : 'Закрытый'}</td>
             </tr>
             <tr>
-              <td scope="col">Номер ТЗ</td>
-              <td scope="col">
+              <td>Номер ТЗ</td>
+              <td>
               <Link to={`/techs/link/${tech.tz_id}`} >
                   {tech.tz_id}
                   </Link>
                   </td>
             </tr>
             <tr>
-              <td scope="col">Статус ТЗ</td>
-              <td scope="col">{Date.parse(tech.end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
+              <td>Статус ТЗ</td>
+              <td>{Date.parse(tech.end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2">
+              <td colSpan="2">
                   <h5>Описание работ по ТЗ</h5>
             </td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2">{tech.info}</td>
+              <td colSpan="2">{tech.info}</td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2">
+              <td colSpan="2">
                   <h5>Документация ТЗ</h5>
                   </td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2">{tech.docs ? tech.docs.map((item, i)=>{
+              <td colSpan="2">{tech.docs ? tech.docs.map((item, i)=>{
         return (
-          <p className="text-start">{item}</p>
+          <p className="text-start" key={'e'+i}>{item}</p>
        )}) : <p className="text-start">Документов нет</p>}
        </td>
             </tr>
@@ -204,43 +197,43 @@ const onClickAccept = (e) => {
           </thead>
           <tbody>
             <tr>
-              <td scope="col" colSpan='2'><h5>Общие данные от поставщика</h5></td>
+              <td colSpan='2'><h5>Общие данные от поставщика</h5></td>
             </tr>
             <tr>
-              <td scope="col">Поставщик</td>
-              <td scope="col">
+              <td>Поставщик</td>
+              <td>
               <Link to={`/orgs/link/${userInfo.o_id}`} >
                   {userInfo.name}
                 </Link>
             </td>
             </tr>
             <tr>
-              <td scope="col">Условия оплаты</td>
-              <td scope="col"><input className='cr_input' name='pay_cond' value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)}></input></td>
+              <td>Условия оплаты</td>
+              <td><input className='cr_input' name='pay_cond' value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)}></input></td>
             </tr>
             <tr>
-              <td scope="col">Дата предоставления КП</td>
-              <td scope="col">{date}</td>
+              <td>Дата предоставления КП</td>
+              <td>{date}</td>
             </tr>
             <tr>
-              <td scope="col">Срок действия КП</td>
-              <td scope="col"><input className='cr_input' name='pay_cond' value={end_date} onChange={(e)=>setEnd_date(e.target.value)} placeholder='ГГГГ-ММ-ДД'></input></td>
+              <td>Срок действия КП</td>
+              <td><input className='cr_input' name='pay_cond' value={end_date} onChange={(e)=>setEnd_date(e.target.value)} placeholder='ГГГГ-ММ-ДД'></input></td>
             </tr>
             <tr>
-              <td scope="col">Статус КП</td>
-              <td scope="col">Активно</td>
+              <td>Статус КП</td>
+              <td>Активно</td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2"><h5>Описание работ от поставщика</h5></td>
+              <td colSpan="2"><h5>Описание работ от поставщика</h5></td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2"><input className='cr_input' name='pay_cond' value={info} onChange={(e)=>setInfo(e.target.value)}></input></td>
+              <td colSpan="2"><input className='cr_input' name='pay_cond' value={info} onChange={(e)=>setInfo(e.target.value)}></input></td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2"><h5>Документация от поставщика</h5></td>
+              <td colSpan="2"><h5>Документация от поставщика</h5></td>
             </tr>
             <tr>
-              <td scope="col" colSpan="2"><h5>Добавление документов возможно из панели редактирования КП</h5>
+              <td colSpan="2"><h5>Добавление документов возможно из панели редактирования КП</h5>
        </td>
             </tr>
           </tbody>
@@ -262,20 +255,20 @@ const onClickAccept = (e) => {
         <table className="table" id="org_table">
     <thead>
       <tr className="org_head">
-        <th scope="col">Наименование работ</th>
-        <th scope="col">Единицы измерения</th>
-        <th scope="col">Кол-во</th>
+        <th>Наименование работ</th>
+        <th>Единицы измерения</th>
+        <th>Кол-во</th>
       </tr>
     </thead>
     <tbody>
       {tech.cst ? tech.cst.map((item, i)=>{
         return (
-      <tr>
-        <td>{item.task}</td>
-        <td>{item.metr}</td>
-        <td>{item.count}</td>
+      <tr key={'w'+i}>
+        <td key={'ww'+i}>{item.task}</td>
+        <td key={'www'+i}>{item.metr}</td>
+        <td key={'wwww'+i}>{item.count}</td>
 
-      </tr>)}): <p>Разбивка стоимости заказчиком не указана</p>}
+      </tr>)}): <tr><td>Разбивка стоимости заказчиком не указана</td></tr>}
     </tbody>
   </table> 
   
@@ -285,27 +278,28 @@ const onClickAccept = (e) => {
 <table className="table" id="org_table">
     <thead>
       <tr className="org_head">
-        <th scope="col">Цена б/НДС/ед.</th>
-        <th scope="col">Итого б/НДС</th>
-        <th scope="col">Комментарий</th>
+        <th>Цена б/НДС/ед.</th>
+        <th>Итого б/НДС</th>
+        <th>Комментарий</th>
         </tr>
     </thead>
     <tbody>
     {tech.cst ? c.length>0 ? c.map((item, i)=>{
         return (
-      <tr>
-        <td>{c.ppu}</td>
-        <td></td>
-        <td>{c.info}</td>
+      <tr key={'q'+ i}>
+        <td key={'qq'+ i}>{c.ppu}</td>
+        <td key={'qqq'+ i}></td>
+        <td key={'qqqq'+ i}>{c.info}</td>
 
       </tr>)}) :
     
     tech.cst.map((item, i)=>{
         return (
-      <tr>
-        <td><input className='cr_input' name='pay_cond' id={i}></input></td>
-        <td></td>
-        <td><input className='cr_input' name='pay_cond' id={i+100000}></input></td>
+      <tr key={'r'+ i}>
+        <td key={'rr'+ i}>
+          <input key={'rrr'+ i} className='cr_input' name='pay_cond' id={i}></input></td>
+        <td key={'rrrr'+ i}></td>
+        <td key={'rrrrr'+ i}><input className='cr_input' name='pay_cond' id={i+100000}></input></td>
 
       </tr>)}): <p>Разбивка стоимости заказчиком не указана</p>}
     </tbody>
@@ -327,22 +321,22 @@ const onClickAccept = (e) => {
           <table className="table" id="org_table">
     <thead>
     <tr className="org_head">
-        <th scope="col">Наименование работ</th>
-        <th scope="col" colSpan="2">Требования клиента</th>
+        <th>Наименование работ</th>
+        <th colSpan="2">Требования клиента</th>
       </tr>
       <tr className="org_head">
-        <th scope="col"></th>
-        <th scope="col">Период, КН</th>
-        <th scope="col">Срок</th>
+        <th></th>
+        <th>Период, КН</th>
+        <th>Срок</th>
       </tr>
     </thead>
     <tbody>
       {tech.cal ? tech.cal.map((item, i)=>{ tz_last = tz_last + item.period
         return (
-      <tr>
-        <td>{item.task_name}</td>
-        <td>{item.period}</td>
-        <td>{new Date(tech.end_date).getWeek() + tz_last}</td>
+      <tr key={'a'+ i}>
+        <td key={'aa'+ i}>{item.task_name}</td>
+        <td key={'aaa'+ i}>{item.period}</td>
+        <td key={'aaaa'+ i}>{new Date(tech.end_date).getWeek() + tz_last}</td>
       </tr>)}) : <p>План работ заказчиком не указан</p>}
     </tbody>
   </table> 
@@ -351,18 +345,19 @@ const onClickAccept = (e) => {
   <table className="table" id="org_table">
     <thead>
     <tr className="org_head">
-        <th scope="col" colSpan="3">Предложение поставщика</th>
+        <th colSpan="3">Предложение поставщика</th>
       </tr>
       <tr className="org_head">
-        <th scope="col">Период, КН</th>
-        <th scope="col">Срок</th>
+        <th>Период, КН</th>
+        <th>Срок</th>
       </tr>
     </thead>
     <tbody>
       {tech.cal ? tech.cal.map((item, i)=>{ last = last + item.period
         return (
-      <tr>
-        <td><input className='cr_input' id={i+200000} name='pay_cond'></input></td>
+      <tr key={'t'+ i}>
+        <td key={'tt'+ i}>
+          <input key={'ttt'+ i} className='cr_input' id={i+200000} name='pay_cond'></input></td>
         <td></td>
       </tr>)}) : <p></p> }
     </tbody>
@@ -382,10 +377,3 @@ const onClickAccept = (e) => {
 
 const CP_New =withRouter(One_CP) 
 export default CP_New;
-/* <td scope="col" colSpan="2">{docs ? docs.map((item, i)=>{
-        return (
-          <p className="text-justify">{item}</p>
-       )}) : <p className="text-justify">Документов нет</p>}
-               <input className='cr_input' value={doc} onChange={(e)=>setDoc(e.target.value)}></input>
-        <button type="button" className="btn btn-outline-dark" onClick={onClickDocs}>Добавить</button> 
-       </td>*/

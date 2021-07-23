@@ -324,7 +324,7 @@ export const listCPs = () => async(dispatch) => {
         responseType: 'blob'
     }
   
-      const response = await axios.get(`http://127.0.0.1:8000/api/cps/doc/${name}/${cp_id}`, config)
+      await axios.get(`http://127.0.0.1:8000/api/cps/doc/${name}/${cp_id}`, config)
       .then(({ data }) => {
         const downloadUrl = window.URL.createObjectURL(new Blob([data]));
         const link = document.createElement('a');

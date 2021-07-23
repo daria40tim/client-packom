@@ -5,7 +5,6 @@ import Link from 'react-router-dom/Link';
 import Loader from './Loader';
 import Message from './Message';
 import Filters from './Filters';
-let specs = ['Уп. материалы', 'Металлоконтейнеры']
 
 const Orgs = () => {
   const dispatch = useDispatch()
@@ -40,13 +39,6 @@ const Orgs = () => {
     dispatch(sortOrgsByGroup(orgs, groupFlag))
     setGroupFlag(!groupFlag)
   }
-
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  //render() {
 
     return(
       <div>
@@ -124,136 +116,5 @@ const Orgs = () => {
 </div>
 )
   }
-//}
 
 export default Orgs;
-
-/*let data3 = [
-      {"o_id": "0", 
-        "name": "ЗАО МИФ Мебель", 
-        "group": "Поставщик", 
-        "spec": "Металлоконтейнеры", 
-        "country": "Россия", 
-        "site": "info.ru", 
-        "phone": "+7(495)545-42-59", 
-        "email": "sales@mif-mebel.ru",
-        "adress": "г. Москва ул. Автозаводская 23, стр. 82",
-        "info":`С 2008 года нами было полностью освоено производство многооборотной металической тары для транспортировки кузовных элементов автомобилей и их различных узлов. По настоящее время мы выпустили более двадцати тысяч единиц подобной тары.
-        Наша тара может оснащаться различными пластиковыми и деревянными элементами, обработанными с помощью 3D-технологий, а также тканевыми вставками. Специально для Вас мы предлагаем спектр услуг: порошковая окраска металлоконструкций (широкая цветовая гамма), гибка круглых и профильных труб, гибка листового металла, резка, холодная штамповка изделий из металла, 3D-фрезеровка, пошив чехлов и тентов и многое другое. Применение новейших технологий и современного оборудования позволило нам добиться высокого качества продукции."
-        `
-      }, 
-      {"o_id": "1", 
-        "name": `ООО "ПК" ТИСО"`, 
-        "group": "Поставщик", 
-        "spec": "Металлоконтейнеры", 
-        "country": "Россия", 
-        "site": "https://pk-tiso.ru/", 
-        "phone": "+7(812) 336-90-95",
-        "adress": "194044 г. Санкт-Петербург, ул. Боткинская 15, корп. 1", 
-        "email": "info@pk-tiso.ru"
-      }, 
-      {"o_id": "2", 
-        "name": `Та-Пласт`, 
-        "group": "Поставщик", 
-        "spec": "Уп.материалы", 
-        "country": "Россия", 
-        "site": "", 
-        "phone": "7 982 422 22 60", 
-        "adress": "Казань", 
-        "email": "utkuzov.a@gmail.com"
-      }, 
-      
-      ]
-      
-      {orgs.map((item, i)=>{
-        return (
-      <tr>
-        <td>
-          <Link to={`/orgs/link/${item.o_id}`} >
-            {item.name}
-          </Link>
-        </td>
-        <td>{item.group}</td>
-        <td>{item.spec}</td>
-        <td>{item.country}</td>
-        <td>{item.site}</td>
-        <td>{item.phone}</td>
-        <td>{item.email}</td>
-      </tr>)})}
-      
-      
-       {orgs.map((item, i)=>{
-      return (
-          <option value={item.name}>{item.name}</option>
-      )})}
-      
-      
-       <div className="filter">
-      <form>
-
- 
-
-  <p>Группа</p>
-  <div>
-    <div>
-    <div className="form-check">
-      <input className="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value='Поставщик'/>
-      <label className="form-check-label" for="gridRadios1">
-        Поставщик
-      </label>
-    </div>
-    <div className="form-check">
-      <input className="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value='Клиент' />
-      <label className="form-check-label" for="gridRadios2">
-        Клиент
-      </label>
-    </div>
-    <div className="form-check">
-      <input className="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value='Клиент, поставщик' />
-      <label className="form-check-label" for="gridRadios3">
-        Клиент, поставщик
-      </label>
-    </div>
-  </div>
-  </div>
-  
-  <p>Страна</p>
-  <div>
-  <select className="form-select" id="country_select">
-          <option>Россия</option>
-      </select>
-  </div>
-
-  <label>Специализация</label>
-  <div>
-  <div>
-
-          
-      {specs.map((item, i)=>{
-      return (
-        <div className="form-check">
-        <input className="form-check-input" type="checkbox" value={item}  id={i}/>
-        <label className="form-check-label">
-          {item}
-        </label>
-        </div>
-        
-      )})}
-
-      </div>
-
-  </div>
-  <div>
- <p>Название</p>
-  <select className="form-select" id="name_select">
-          <option disabled>Выберите название</option>
-          <option selected value="">Не выбрано</option>
-          {orgs.map((item, i)=>{
-      return (
-          <option value={item.name}>{item.name}</option>
-      )})}  
-      </select>
-      </div>
-    <button type="button" className="btn btn-outline-dark" onClick={onClick}>Применить</button>
-</form>
-</div>*/

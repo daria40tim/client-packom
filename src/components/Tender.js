@@ -1,92 +1,7 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link, useHistory, withRouter} from 'react-router-dom';
 import { decideTender, listTenderDetails } from '../actions/tenderAction';
-let data =
-    {'date': '14.01.2021',
-    'selected_cp': '1', 
-    "cp_o_id": "1",
-    "tz_o_id": "2",
-    "cp_org": "Организация 3",
-    "tz_org": "Организация 1", 
-    "proj": "ГК 6040", 
-    "task_name": "Изготовление серии", 
-    "tz_id": '1', 
-    "cp_count": "2", 
-    "max_cp": '33000.00',
-    "min_cp": "25500.00", 
-    "selected_sum": "25500.00",
-    "term": 3, 
-    "docs": ["Пример.pdf", "1.doc"],
-    "history":"",
-    "info": "",
-    "tz_calendars": ["Разработка концепта", "Изготовление серии", "Доставка"],
-    "tz_costs": [
-        {
-            "cost_id": 2,
-            "task": "Изготовление серии",
-            "metr": "шт.",
-            "count": 150,
-            "tz_id": 25,
-            "cp_id": 0,
-            "ppu": "0",
-            "sum": "0",
-            "info": ""
-        },
-        {
-            "cost_id": 3,
-            "task": "Доставка",
-            "metr": "рейс",
-            "count": 1,
-            "tz_id": 25,
-            "cp_id": 0,
-            "sum": "0",
-            "ppu": "0",
-            "info": ""
-        }
-    ],
-    "cps":[
-        {
-            "cp_id": "1",
-            "org": "Организация 3",
-            "o_id": "1",
-            "costs": [
-                {
-                    "task": "Изготовление серии",
-                    "cost_sum": "22500.00"
-                },
-                {
-                    "task": "Доставка",
-                    "cost_sum": "3000.00"
-                },
-            ], 
-            "sum": "25500.00",
-            "sum_ppu": "170.00", 
-            "pay_cond": "30% предоплата",
-            "calendars":[1,1,1]
-        },
-        {
-            "org": "Организация 5",
-            "cp_id": "2",
-            "o_id": "1",
-            "costs": [
-                {
-                    "task": "Изготовление серии",
-                    "cost_sum": "28000.00"
-                },
-                {
-                    "task": "Доставка",
-                    "cost_sum": "5000.00"
-                },
-            ], 
-            "sum": "33000.00",
-            "sum_ppu": "220.00", 
-            "pay_cond": "100% постоплата",
-            "calendars":[0, 2, 1]
-               
-        },
-    ]
-    }
   
     Date.prototype.getWeek = function() {
       var date = new Date(this.getTime());
@@ -101,13 +16,9 @@ const Tec = ({match}) => {
   const dispatch = useDispatch()
   const history = useHistory()
   const tenderDetails = useSelector(state => state.tenderDetails)
-  const {loading, error, tender} = tenderDetails
+  const { tender} = tenderDetails
 
-  const [costs, setCosts] = useState([])
   const [check, setChecked] = useState(0)
-  let last = 0
-
-
   useEffect(() => {
     dispatch(listTenderDetails(match.params.tender_id))
   }, [dispatch, match])
@@ -139,57 +50,57 @@ const Tec = ({match}) => {
           </thead>
           <tbody>
             <tr>
-              <td scope="col" colSpan='2'><h5>Общие данные</h5></td>
+              <td colSpan='2'><h5>Общие данные</h5></td>
             </tr>
             <tr align='justify'>
-              <td scope="col">Дата тендера</td>
-              <td scope="col">{tender.date}
+              <td>Дата тендера</td>
+              <td>{tender.date}
                   </td>
             </tr>
             <tr align='justify'>
-              <td scope="col">Клиент</td>
-              <td scope="col">
+              <td>Клиент</td>
+              <td>
                   <Link to={`/orgs/link/${userInfo.o_id}`} >
                   {tender.client}
                 </Link>
                 </td>
             </tr>
             <tr align='justify'>
-              <td scope="col">Проект</td>
-              <td scope="col">{tender.proj}</td>
+              <td>Проект</td>
+              <td>{tender.proj}</td>
             </tr>
             <tr align='justify'>
-              <td scope="col">Вид задания</td>
-              <td scope="col">{tender.task}</td>
+              <td>Вид задания</td>
+              <td>{tender.task}</td>
             </tr>
             <tr align='justify'>
-              <td scope="col">Номер ТЗ</td>
-              <td scope="col">  <Link to={`/techs/link/${tender.tz_id}`} >
+              <td>Номер ТЗ</td>
+              <td>  <Link to={`/techs/link/${tender.tz_id}`} >
                   {tender.tz_id}
                 </Link></td>
             </tr>
             <tr align='justify'>
-              <td scope="col">Количество собранных КП</td>
-              <td scope="col">{tender.cps ? tender.cps.length : 0}</td>
+              <td>Количество собранных КП</td>
+              <td>{tender.cps ? tender.cps.length : 0}</td>
             </tr>
             <tr align='justify'>
-              <td scope="col">Максимальное КП</td>
-              <td scope="col">{tender.max_cp}</td>
+              <td>Максимальное КП</td>
+              <td>{tender.max_cp}</td>
             </tr>
             <tr align='justify'>
-              <td scope="col">Минимальное КП</td>
-              <td scope="col">{tender.min_cp}</td>
+              <td>Минимальное КП</td>
+              <td>{tender.min_cp}</td>
             </tr>
             <tr align='justify'>
-              <td scope="col">Принятое КП</td>
-              <td scope="col"> 
-              {tender.selected_cp != 0 ? <Link to={`/cps/link/${tender.cp_id}`} >
+              <td>Принятое КП</td>
+              <td> 
+              {tender.selected_cp !== 0 ? <Link to={`/cps/link/${tender.cp_id}`} >
                   {tender.selected_cp}
                 </Link> : 'КП не выбрано' }</td>
             </tr>
             <tr align='justify'>
-              <td scope="col">Срок реализации проекта</td>
-              <td scope="col">{new Date(tender.date).getWeek() + tender.term}</td>
+              <td>Срок реализации проекта</td>
+              <td>{new Date(tender.date).getWeek() + tender.term}</td>
             </tr>
           </tbody>
         </table>
@@ -201,9 +112,9 @@ const Tec = ({match}) => {
           <table className="table" id="org_table">
     <thead>
       <tr className="org_head">
-        <th scope="col"></th>
-        <th scope="col">Кол-во</th>
-        <th scope="col">Единицы измерения</th>
+        <th></th>
+        <th>Кол-во</th>
+        <th>Единицы измерения</th>
         {tender.cps ? tender.cps.map((item, i)=>{
         return (<th><Link to={`/cps/link/${item.cp_id}`}>{item.org}</Link></th>)}): <p></p>}
       </tr>
@@ -250,7 +161,7 @@ const Tec = ({match}) => {
             <td align='justify'> <h5>Решение</h5></td>
             <td></td>
             <td></td>
-            {tender.selected_cp == 0 ? tender.cps ? tender.cps.map((item, i)=>{return (
+            {tender.selected_cp === 0 ? tender.cps ? tender.cps.map((item, i)=>{return (
             <td>
                 <input className="form-check-input" type="radio" name="gridRadios" id={item.cp_id} value={item.cp_id} onChange={(e)=>{setChecked(e.target.value)}}/>
                     </td>)}): <p></p> : <p></p>}
@@ -259,7 +170,7 @@ const Tec = ({match}) => {
   </table> }
 
   {!tender.active ? 'Тендер был отменен':
-  tender.selected_cp == 0 ? !tender.cps ?<button type="button" className="btn btn-outline-dark" onClick={onClickDecline}>Отменить тендер</button> : tender.date> Date.now() ? <button type="button" onClick={onClickDecide} className="btn btn-outline-dark">Принять решение досрочно</button>
+  tender.selected_cp === 0 ? !tender.cps ?<button type="button" className="btn btn-outline-dark" onClick={onClickDecline}>Отменить тендер</button> : tender.date> Date.now() ? <button type="button" onClick={onClickDecide} className="btn btn-outline-dark">Принять решение досрочно</button>
 : <button type="button" className="btn btn-outline-dark" onClick={onClickDecide}>Принять решение</button>: <p></p>}
 </div>
 </div>

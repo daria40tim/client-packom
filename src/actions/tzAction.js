@@ -1,6 +1,5 @@
 import {TZ_LIST_FAIL, TZ_LIST_SUCCESS, TZ_LIST_SORT_SUCCESS, TZ_LIST_SORTEDBY_TZ_ID, TZ_LIST_SORTEDBY_STATUS, TZ_LIST_REQUEST, TZ_DETAILS_REQUEST, TZ_DETAILS_SUCCESS, TZ_DETAILS_FAIL, TZ_CREATE_REQUEST, TZ_CREATE_SUCCESS, TZ_CREATE_FAIL, TZ_DELETE_CAL_REQUEST, TZ_DELETE_CAL_SUCCESS, TZ_DELETE_CAL_FAIL, TZ_DELETE_CST_REQUEST, TZ_DELETE_CST_SUCCESS, TZ_DELETE_CST_FAIL, TZ_UPDATE_REQUEST, TZ_UPDATE_SUCCESS, TZ_UPDATE_FAIL, TZ_LIST_SORTEDBY_CLIENT, TZ_LIST_SORT_FAIL, TZ_LIST_SORTEDBY_DATE, TZ_LIST_SORTEDBY_END_DATE, TZ_FILE_UPLOAD_REQUEST, TZ_FILE_UPLOAD_SUCCESS, TZ_FILE_UPLOAD_FAIL, DOWN_TZ_DOC_REQUEST, DOWN_TZ_DOC_SUCCESS, DOWN_TZ_DOC_FAIL } from '../constants/tzConstants'
 import axios from 'axios'
-import { useSelector } from 'react-redux'
 
 export const listTechs = () => async(dispatch) => {
   try {
@@ -384,7 +383,7 @@ export const listTzDownDoc = (name, tz_id) => async(dispatch) => {
       responseType: 'blob'
   }
 
-    const response = await axios.get(`http://127.0.0.1:8000/api/techs/doc/${name}/${tz_id}`, config)
+    await axios.get(`http://127.0.0.1:8000/api/techs/doc/${name}/${tz_id}`, config)
     .then(({ data }) => {
       const downloadUrl = window.URL.createObjectURL(new Blob([data]));
       const link = document.createElement('a');
