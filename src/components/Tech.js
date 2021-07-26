@@ -62,7 +62,7 @@ const Tec = ({match}) => {
           <button type="button" className="btn btn-outline-dark m-2" onClick={onClickUpdate}>
             <img src={pencil} alt='Изменить' width='25'></img>
             </button> :
-          userInfo.group_id === 2 || userInfo.group_id === 3?
+          userInfo.group_id === "2" || userInfo.group_id === "3"?
           <button type="button" className="btn btn-outline-dark" onClick={onClickAdd}>Предложить КП</button> : <p></p>
           :'ТЗ больше не активно'}
         <h2>Общие данные</h2>
@@ -121,19 +121,11 @@ const Tec = ({match}) => {
               <td>Статус ТЗ</td>
               <td>{Date.parse(tech.end_date)> Date.now() ? 'Активно' : 'Архив'}</td>
             </tr>
-            <tr>
-              <td>Документация</td>
-            <td>
-                {tech.docs ? tech.docs.map((item, i)=>{
-              return (
-                <button className="btn" onClick={onClickDownload} id={i}>{item}</button>
-            )}) : <p className="text-start">Документов нет</p>}
-            </td>
-            </tr>
           </tbody>
         </table>
         </td>
         <td>
+
         <h5 className="text-start">Разбивка стоимости</h5>
           <table className="table w-100" id="org_table">
             <thead>
@@ -150,7 +142,7 @@ const Tec = ({match}) => {
                 <td>{item.task}</td>
                 <td>{item.metr}</td>
                 <td>{item.count}</td>
-              </tr>)}): <tr><td>'Заказчик не добавил этапы работ'</td></tr>}
+              </tr>)}): <tr><td>Заказчик не добавил этапы работ</td></tr>}
             </tbody>
           </table> 
 
@@ -174,13 +166,19 @@ const Tec = ({match}) => {
                 <td>{item.task_name}</td>
                 <td>{item.period}</td>
                 <td>{new Date(tech.end_date).getWeek() + last}</td>
-              </tr>)}):<tr><td>'Заказчик не добавил календарный план'</td></tr>}
+              </tr>)}):<tr><td>Заказчик не добавил календарный план</td></tr>}
             </tbody>
           </table>
         </td>
         </tr>
         <tr>
           <td colSpan='2'>
+          <h5 className="text-start">Документация</h5>
+                {tech.docs ? tech.docs.map((item, i)=>{
+              return (
+                <button className="btn" onClick={onClickDownload} id={i}>{item}</button>
+            )}) : <p className="text-start">Документов нет</p>}
+
           <h5 className="text-start">Описание работ</h5>
           <p className="text-start">{tech.info}</p>
   <h5 className="text-start">История изменений</h5>

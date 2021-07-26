@@ -1,7 +1,7 @@
-import React, {useEffect } from 'react';
+import React, {useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link, withRouter} from 'react-router-dom';
-import { listTenders } from '../actions/tenderAction';
+import { listTenders, sortTendersByDate, sortTendersByStatus, sortTendersByTenderId, sortTendersByTZId } from '../actions/tenderAction';
 import Filters from './Filters';
 import Message from './Message';
 
@@ -11,7 +11,27 @@ const Tender = () => {
     const dispatch = useDispatch()
 
     const tenderList = useSelector(state => state.tenderList)
-    
+    const [tz_idFlag, setTzIdFlag] = useState(true)
+    const [dateFlag, setDateFlag] = useState(true)
+    const [tender_idFlag, setTenderIdFlag] = useState(true)
+    const [tender_stFlag, setStatusFlag] = useState(true)
+
+    const onClickTenderId = (e) => {
+      dispatch(sortTendersByTenderId(tenders, tender_idFlag))
+      setTenderIdFlag(!tender_idFlag)
+    }
+    const onClickTZId = (e) => {
+      dispatch(sortTendersByTZId(tenders, tz_idFlag))
+      setTzIdFlag(!tz_idFlag)
+    }
+    const onClickDate = (e) => {
+      dispatch(sortTendersByDate(tenders, dateFlag))
+      setDateFlag(!dateFlag)
+    }
+    const onClickStatus = (e) => {
+      dispatch(sortTendersByStatus(tenders, tender_stFlag))
+      setStatusFlag(!tender_stFlag)
+    }
     
   
     useEffect(() => {dispatch(listTenders())}, [dispatch])
@@ -32,13 +52,22 @@ const Tender = () => {
     <thead>
       <tr className="org_head">
         <th scope="col">
-          <p>Номер решения</p>
+        <label>Номер решения</label>
+          <button onClick={onClickTenderId} type="button" className="btn sort_btn"><svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-caret-down-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path d={tender_idFlag ? "M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" :"M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"}/>
+</svg></button>
           </th>
         <th scope="col">
-          <p>Номер ТЗ</p>
+        <label>Номер ТЗ</label>
+          <button onClick={onClickTZId} type="button" className="btn sort_btn"><svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-caret-down-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path d={tz_idFlag ? "M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" :"M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"}/>
+</svg></button>
           </th>
           <th scope="col">
-          <p>Дата решения</p>
+          <label>Дата решения</label>
+          <button onClick={onClickDate} type="button" className="btn sort_btn"><svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-caret-down-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path d={dateFlag ? "M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" :"M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"}/>
+</svg></button>
           </th>
           <th scope="col">
           <p>Проект</p>
@@ -48,7 +77,10 @@ const Tender = () => {
         <th scope="col">Вид упаковки</th>
         <th scope="col">Вид задания</th>
         <th scope="col">
-          <p>Статус тендера</p>
+        <label>Статус тендера</label>
+          <button onClick={onClickStatus} type="button" className="btn sort_btn"><svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-caret-down-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path d={tender_stFlag ? "M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" :"M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"}/>
+</svg></button>
           </th>
       </tr>
     </thead>
@@ -64,13 +96,13 @@ const Tender = () => {
         <td><Link to={`/techs/link/${item.tz_id}`} >
             {item.tz_id}
           </Link></td>
-        <td>{item.date}</td>
+        <td>{new Date(item.date).toISOString().slice(0, 10)}</td>
         <td>{item.proj}</td>
         <td>{item.group}</td>
         <td>{item.type}</td>
         <td>{item.kind}</td>
         <td>{item.task}</td>
-        <td>{item.selected_cp !== 0 ? 'Принято' : item.tz_st === 4 ? 'Отменено' : Date.parse(item.end_date) - Date.now() > 0 ? "Ожидает решение" :  'Сбор КП'}</td>
+        <td>{item.tender_st}</td>
       </tr>)}): <Message>У вас еще нет тендерных решений</Message>}
     </tbody>
   </table> 

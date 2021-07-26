@@ -1,6 +1,6 @@
-import { DOWN_TZ_DOC_FAIL, DOWN_TZ_DOC_REQUEST, DOWN_TZ_DOC_SUCCESS, TZ_CREATE_FAIL, TZ_CREATE_REQUEST, TZ_CREATE_SUCCESS, TZ_DELETE_CAL_FAIL, TZ_DELETE_CAL_REQUEST, TZ_DELETE_CAL_SUCCESS, TZ_DELETE_CST_FAIL, TZ_DELETE_CST_REQUEST, TZ_DELETE_CST_SUCCESS, TZ_DETAILS_FAIL, TZ_DETAILS_REQUEST, TZ_DETAILS_SUCCESS, TZ_FILE_UPLOAD_FAIL, TZ_FILE_UPLOAD_REQUEST, TZ_FILE_UPLOAD_SUCCESS, TZ_LIST_FAIL, TZ_LIST_REQUEST, TZ_LIST_SORTEDBY_CLIENT, TZ_LIST_SORTEDBY_DATE, TZ_LIST_SORTEDBY_END_DATE, TZ_LIST_SORTEDBY_STATUS, TZ_LIST_SORTEDBY_TZ_ID, TZ_LIST_SORT_FAIL, TZ_LIST_SUCCESS, TZ_UPDATE_FAIL, TZ_UPDATE_REQUEST, TZ_UPDATE_SUCCESS } from '../constants/tzConstants'
+import { DOWN_TZ_DOC_FAIL, DOWN_TZ_DOC_REQUEST, DOWN_TZ_DOC_SUCCESS, GET_TECH_FILTER_DATA_FAIL, GET_TECH_FILTER_DATA_REQUEST, GET_TECH_FILTER_DATA_SUCCESS, TZ_CREATE_FAIL, TZ_CREATE_REQUEST, TZ_CREATE_SUCCESS, TZ_DELETE_CAL_FAIL, TZ_DELETE_CAL_REQUEST, TZ_DELETE_CAL_SUCCESS, TZ_DELETE_CST_FAIL, TZ_DELETE_CST_REQUEST, TZ_DELETE_CST_SUCCESS, TZ_DETAILS_FAIL, TZ_DETAILS_REQUEST, TZ_DETAILS_SUCCESS, TZ_FILE_UPLOAD_FAIL, TZ_FILE_UPLOAD_REQUEST, TZ_FILE_UPLOAD_SUCCESS, TZ_LIST_FAIL, TZ_LIST_REQUEST, TZ_LIST_SORTEDBY_CLIENT, TZ_LIST_SORTEDBY_CP_ST, TZ_LIST_SORTEDBY_DATE, TZ_LIST_SORTEDBY_END_DATE, TZ_LIST_SORTEDBY_STATUS, TZ_LIST_SORTEDBY_TENDER_ST, TZ_LIST_SORTEDBY_TZ_ID, TZ_LIST_SORT_FAIL, TZ_LIST_SUCCESS, TZ_UPDATE_FAIL, TZ_UPDATE_REQUEST, TZ_UPDATE_SUCCESS } from '../constants/tzConstants'
 
-export const tzListReducer = (state = {data: {techs: [], cps: []}}, action) => {
+export const tzListReducer = (state = {data: []}, action) => {
     switch (action.type) {
         case TZ_LIST_REQUEST:
             return {loading: true, ...state}
@@ -83,18 +83,22 @@ export const tzUpdateReducer = (state = {}, action) => {
 }
 
 
-export const tzListSortedReducer = (state = {techs:[]}, action) => {
+export const tzListSortedReducer = (state = {data:[]}, action) => {
     switch (action.type) {
         case TZ_LIST_SORTEDBY_CLIENT:
-            return {loading: false, techs: action.payload}
+            return {loading: false, data: action.payload}
         case TZ_LIST_SORTEDBY_DATE:
-            return {loading: false, techs: action.payload}
+            return {loading: false, data: action.payload}
         case TZ_LIST_SORTEDBY_END_DATE:
-            return {loading: false, techs: action.payload}
+            return {loading: false, data: action.payload}
         case TZ_LIST_SORTEDBY_TZ_ID:
-            return {loading: false, techs: action.payload}
+            return {loading: false, data: action.payload}
         case TZ_LIST_SORTEDBY_STATUS:
-            return {loading: false, techs: action.payload}
+            return {loading: false, data: action.payload}
+        case TZ_LIST_SORTEDBY_CP_ST:
+            return {loading: false, data: action.payload}
+        case TZ_LIST_SORTEDBY_TENDER_ST:
+            return {loading: false, data: action.payload}
         case TZ_LIST_SORT_FAIL:
             return {loading: false, error: action.payload}
         default: 
@@ -124,6 +128,19 @@ export const tzDownDocReducer = (state = {}, action) => {
             return {loading: false, success: action.payload}
         case DOWN_TZ_DOC_FAIL:
             return {loading: false, success: false, error: action.payload}
+        default: 
+            return state
+    }
+}
+
+export const selectTechFilterDataReducer = (state = {data: {clients: [], projs : []}}, action) => {
+    switch (action.type) {
+        case GET_TECH_FILTER_DATA_REQUEST:
+            return {loading: true, ...state}
+        case GET_TECH_FILTER_DATA_SUCCESS:
+            return {loading: false, data: action.payload}
+        case GET_TECH_FILTER_DATA_FAIL:
+            return {loading: false, error: action.payload}
         default: 
             return state
     }

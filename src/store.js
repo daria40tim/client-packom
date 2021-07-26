@@ -3,10 +3,10 @@ import thunk from 'redux-thunk'
 import {orgAddReducer, orgDeleteTrusted, orgDownDocReducer, orgListReducer, orgReducer, orgUpdateReducer, selectOrgFilterDataReducer} from './reducers/orgReducer'
 import {userLoginReducer, userRegisterReducer} from './reducers/userRedusers'
 import {composeWithDevTools} from 'redux-devtools-extension'
-import { tzCreateReducer, tzDeleteCalReducer, tzDeleteCstReducer, tzDownDocReducer, tzListReducer, tzListSortedReducer, tzReducer } from './reducers/tzReducer'
+import { selectTechFilterDataReducer, tzCreateReducer, tzDeleteCalReducer, tzDeleteCstReducer, tzDownDocReducer, tzListReducer, tzListSortedReducer, tzReducer } from './reducers/tzReducer'
 import { selectCountriesReducer, selectListReducer, selectLoginReducer, selectSpecsReducer } from './reducers/selectReducer'
 import { cpCreateReducer, cpDeleteCalReducer, cpDeleteCstReducer, cpDownDocReducer, cpListReducer, cpReducer } from './reducers/cpReducers'
-import { fullCostsReducer, tenderDecideReducer, tenderListReducer, tenderReducer } from './reducers/tenderReducer'
+import { fullCostsReducer, tenderDecideReducer, tenderListReducer, tenderListSortedReducer, tenderReducer } from './reducers/tenderReducer'
 
 
 const reducer = combineReducers({
@@ -40,6 +40,8 @@ const reducer = combineReducers({
     loginDoubled: selectLoginReducer,
     delTrusted: orgDeleteTrusted,
     orgFilterData: selectOrgFilterDataReducer,
+    tenderListSorted: tenderListSortedReducer,
+    techFilterData: selectTechFilterDataReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

@@ -22,6 +22,8 @@ Date.prototype.getWeek = function() {
 
 const Tec_new = () => {
 
+  let la = 0
+
     const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
     const [proj, setProj] = useState('')
     const [group, setGroup] = useState('')
@@ -94,11 +96,10 @@ const Tec_new = () => {
       if(cal[e.target.id].active){
         cal[e.target.id].active = false
         e.target.src = plus
-        console.log(cal[e.target.id].active)
+        
       } else {
         cal[e.target.id].active = true
         e.target.src = x
-        console.log(cal[e.target.id].active)
       }
     }
 
@@ -122,7 +123,8 @@ const Tec_new = () => {
       calendars.push({
         task_name: taskCal, 
         period: parseInt(period), 
-        term: t
+        term: t, 
+        active: true
       })
       setCal(calendars)
       setTaskCal('')
@@ -158,6 +160,10 @@ const Tec_new = () => {
         alert('Заполните поле даты окончания сбора КП')
         return
       }
+      else if (new Date(end_date) <= new Date()){
+        alert('Поле даты окончания сбора КП заполнено неверно')
+        return
+      }
       else if (info === ''){
         alert('Заполните поле описания работ')
         return
@@ -170,6 +176,33 @@ const Tec_new = () => {
         alert('Разбивка стоимости не может быть пуста')
         return
       }
+      if (taskCal !== '' && period !== '') {
+        let calendars = [...cal]
+
+        let t = parseInt(new Date(end_date).getWeek()) + parseInt(period) + parseInt(last)
+        if (t > 52){
+          t = t - 52
+        }
+        calendars.push({
+          task_name: taskCal, 
+          period: parseInt(period), 
+          term: t, 
+          active: true
+        })
+        setCal(calendars)
+
+      }
+      if (taskCost !== '' && metr !== '' && count !== ''){
+        let costs = [...cst]
+        costs.push({
+          task: taskCost, 
+          metr: metr, 
+          count: parseInt(count),
+          active: true,
+        })
+        setCst(costs)
+      }
+
       dispatch(createTZ(proj, group, type, kind, task, pay_cond, end_date, privacy.toString(), info, cal, cst, date, docs))
       history.push('/tech/')
     }
@@ -424,11 +457,12 @@ const Tec_new = () => {
     </thead>
     <tbody>
     {cal ? cal.map((item, i)=>{
+      la = la + item.period
         return(
           <tr key={'z'+i}>
             <td key={'zz'+i}>{item.task_name}</td>
             <td key={'zzz'+i}>{item.period}</td>
-            <td key={'zzzz'+i}>{item.term}</td>
+            <td key={'zzzz'+i}>{new Date(end_date).getWeek() + la}</td>
             <td key={'zzzzz'+i}>
               <Button key={'zzzzzq'+i} variant='light' className="main_button btn btn-outline-dark" onClick={onClickCalAccDelete}>
                 <img id={i} key={'zzzzzqq'+i} src={x} alt="Accept" width="32" height="32"/>

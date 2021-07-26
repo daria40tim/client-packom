@@ -1,7 +1,7 @@
-import {TZ_LIST_FAIL, TZ_LIST_SUCCESS, TZ_LIST_SORT_SUCCESS, TZ_LIST_SORTEDBY_TZ_ID, TZ_LIST_SORTEDBY_STATUS, TZ_LIST_REQUEST, TZ_DETAILS_REQUEST, TZ_DETAILS_SUCCESS, TZ_DETAILS_FAIL, TZ_CREATE_REQUEST, TZ_CREATE_SUCCESS, TZ_CREATE_FAIL, TZ_DELETE_CAL_REQUEST, TZ_DELETE_CAL_SUCCESS, TZ_DELETE_CAL_FAIL, TZ_DELETE_CST_REQUEST, TZ_DELETE_CST_SUCCESS, TZ_DELETE_CST_FAIL, TZ_UPDATE_REQUEST, TZ_UPDATE_SUCCESS, TZ_UPDATE_FAIL, TZ_LIST_SORTEDBY_CLIENT, TZ_LIST_SORT_FAIL, TZ_LIST_SORTEDBY_DATE, TZ_LIST_SORTEDBY_END_DATE, TZ_FILE_UPLOAD_REQUEST, TZ_FILE_UPLOAD_SUCCESS, TZ_FILE_UPLOAD_FAIL, DOWN_TZ_DOC_REQUEST, DOWN_TZ_DOC_SUCCESS, DOWN_TZ_DOC_FAIL } from '../constants/tzConstants'
+import {TZ_LIST_FAIL, TZ_LIST_SUCCESS, TZ_LIST_SORT_SUCCESS, TZ_LIST_SORTEDBY_TZ_ID, TZ_LIST_SORTEDBY_STATUS, TZ_LIST_REQUEST, TZ_DETAILS_REQUEST, TZ_DETAILS_SUCCESS, TZ_DETAILS_FAIL, TZ_CREATE_REQUEST, TZ_CREATE_SUCCESS, TZ_CREATE_FAIL, TZ_DELETE_CAL_REQUEST, TZ_DELETE_CAL_SUCCESS, TZ_DELETE_CAL_FAIL, TZ_DELETE_CST_REQUEST, TZ_DELETE_CST_SUCCESS, TZ_DELETE_CST_FAIL, TZ_UPDATE_REQUEST, TZ_UPDATE_SUCCESS, TZ_UPDATE_FAIL, TZ_LIST_SORTEDBY_CLIENT, TZ_LIST_SORT_FAIL, TZ_LIST_SORTEDBY_DATE, TZ_LIST_SORTEDBY_END_DATE, TZ_FILE_UPLOAD_REQUEST, TZ_FILE_UPLOAD_SUCCESS, TZ_FILE_UPLOAD_FAIL, DOWN_TZ_DOC_REQUEST, DOWN_TZ_DOC_SUCCESS, DOWN_TZ_DOC_FAIL, TZ_LIST_SORTEDBY_CP_ST, TZ_LIST_SORTEDBY_TENDER_ST, GET_TECH_FILTER_DATA_REQUEST, GET_TECH_FILTER_DATA_SUCCESS, GET_TECH_FILTER_DATA_FAIL } from '../constants/tzConstants'
 import axios from 'axios'
 
-export const listTechs = () => async(dispatch) => {
+export const listTechs = (s_date, e_date, clients, projs, tz_sts, tender_sts, cp_sts) => async(dispatch) => {
   try {
 
     const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
@@ -17,7 +17,7 @@ export const listTechs = () => async(dispatch) => {
       mode: 'cors'
   }
 
-    const { data } = await axios.get('http://127.0.0.1:8000/api/techs/', config)
+    const { data } = await axios.post('http://127.0.0.1:8000/api/techs/job/', {s_date, e_date, clients, projs, tz_sts, tender_sts, cp_sts} ,config)
 
     dispatch({
       type: TZ_LIST_SUCCESS,
@@ -162,7 +162,7 @@ export const tzUpdate = (tz_id, proj, group, type, kind, task, pay_cond, end_dat
       mode: 'cors'
   }
 
-    await axios.put(`http://127.0.0.1:8000/api/techs/${tz_id}`, {proj, group, type, kind, task, pay_cond, end_date, info, cal, cst, history}, config)
+    await axios.post(`http://127.0.0.1:8000/api/techs/${tz_id}`, {proj, group, type, kind, task, pay_cond, end_date, info, cal, cst, history}, config)
 
     dispatch({
       type: TZ_UPDATE_SUCCESS,
@@ -401,6 +401,100 @@ export const listTzDownDoc = (name, tz_id) => async(dispatch) => {
   } catch (error) {
     dispatch({
       type: DOWN_TZ_DOC_FAIL,
+      payload: error.response && error.response.data.message ? error.response.data.message : error.message
+    })
+  }
+}
+
+export const sortTechsByCpSt = (techs, cp_stFlag) => async(dispatch) => {
+  try {
+    dispatch({type: TZ_LIST_SORTEDBY_CP_ST})
+
+    const data = techs.sort((a, b)=>{
+      if ((a.cp_st > b.cp_st) && cp_stFlag) {
+        return -1;
+      }
+      if ((a.cp_st < b.cp_st) && cp_stFlag) {
+        return 1;
+      }
+      if ((a.cp_st > b.cp_st) && !cp_stFlag) {
+        return 1;
+      }
+      if ((a.cp_st < b.cp_st) && !cp_stFlag) {
+        return -1;
+      }
+      return 0;
+    })
+
+    dispatch({
+      type: TZ_LIST_SORT_SUCCESS,
+      payload: data
+    })
+  } catch (error) {
+    dispatch({
+      type: TZ_LIST_SORT_FAIL,
+      payload: error.response && error.response.data.message ? error.response.data.message : error.message
+    })
+  }
+}
+
+export const sortTechsByTenderSt = (techs, tender_stFlag) => async(dispatch) => {
+  try {
+    dispatch({type: TZ_LIST_SORTEDBY_TENDER_ST})
+
+    const data = techs.sort((a, b)=>{
+      if ((a.tender_st > b.tender_st) && tender_stFlag) {
+        return -1;
+      }
+      if ((a.tender_st < b.tender_st) && tender_stFlag) {
+        return 1;
+      }
+      if ((a.tender_st > b.tender_st) && !tender_stFlag) {
+        return 1;
+      }
+      if ((a.tender_st < b.tender_st) && !tender_stFlag) {
+        return -1;
+      }
+      return 0;
+    })
+
+    dispatch({
+      type: TZ_LIST_SORT_SUCCESS,
+      payload: data
+    })
+  } catch (error) {
+    dispatch({
+      type: TZ_LIST_SORT_FAIL,
+      payload: error.response && error.response.data.message ? error.response.data.message : error.message
+    })
+  }
+}
+
+export const techFilterData = () => async(dispatch) => {
+  try {
+
+    const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
+    dispatch({type: GET_TECH_FILTER_DATA_REQUEST})
+    let auth = "Bearer " + userInfo.token
+
+
+    const config = {
+      headers: {
+          'Content-Type': 'application/json',
+          "Authorization": auth
+      },
+      mode: 'cors'
+  }
+
+    const { data } = await axios.get('http://127.0.0.1:8000/api/techs/filter', config)
+
+    dispatch({
+      type: GET_TECH_FILTER_DATA_SUCCESS,
+      payload: data.data
+    })
+  } catch (error) {
+    dispatch({
+      type: GET_TECH_FILTER_DATA_FAIL,
       payload: error.response && error.response.data.message ? error.response.data.message : error.message
     })
   }

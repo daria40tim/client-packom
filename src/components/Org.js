@@ -4,6 +4,7 @@ import {Link, withRouter} from 'react-router-dom';
 import {listOrgDetails, listOrgAdd, listOrgDownDoc, deleteTrusted} from '../actions/orgAction'
 import Loader from './Loader';
 import Message from './Message';
+import pencil from '../pic/pencil.svg'
 
 const Or = ({match}) => {
   const dispatch = useDispatch()
@@ -49,7 +50,9 @@ const Or = ({match}) => {
           </thead>
           <tbody>
             <tr>
-              <td colSpan='2'>Общие данные</td>
+              <td colSpan='2'>
+                <h2>Общие данные</h2>
+                </td>
             </tr>
             <tr>
               <td>Название</td>
@@ -92,15 +95,17 @@ const Or = ({match}) => {
           </tbody>
         </table>
         </div>
-        {userInfo.o_id === match.params.o_id ? <button type="button" className="btn btn-outline-dark">
-          <Link className="nav-link " to={`/orgs/upd/${userInfo.o_id}`}>Изменить данные</Link>
+        {userInfo.o_id === parseInt(match.params.o_id) ? <button type="button" className="btn btn-outline-dark">
+          <Link className="nav-link " to={`/orgs/upd/${userInfo.o_id}`}>
+          <img src={pencil} alt='Изменить' width='25'></img>
+            </Link>
           </button>
         : org.group === 'Клиент' ? <div></div> 
-        : org.trusted !== null && org.trusted.includes(org.o_id) ? 
+        : org.trusted !== undefined ? org.trusted.includes(org.o_id) ? 
         <button type="button" className="btn btn-outline-dark" onClick={onClickDelete}>Удалить из списка поставщиков</button>
         : userInfo.group_id!==2 && (org.trusted===null || !org.trusted.includes(match.params.o_id))?
          <button type="button" className="btn btn-outline-dark" onClick={onClick}>Добавить в список поставщиков</button>
-        : <div></div>
+        : <div></div> : <div></div> 
         }
           <h5 id="name" className="text-start">Документация</h5>
           {org.docs ? org.docs.map((item, i)=>{

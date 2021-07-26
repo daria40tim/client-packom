@@ -1,10 +1,14 @@
 import React, {useEffect, useState } from 'react';
-import { Badge, Dropdown, Form, InputGroup } from 'react-bootstrap';
+import { Badge, Button, Dropdown, Form, InputGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import {useHistory, withRouter} from 'react-router-dom';
 import { listSelect } from '../actions/selectAction';
 import { deleteCal, deleteCst, listTechDetails, tzUpdate } from '../actions/tzAction';
 import InputMask from "react-input-mask";
+import check from '../pic/check.svg'
+import x from  '../pic/x.svg'
+import plus from  '../pic/plus.svg'
+import save from  '../pic/save.svg'
 
 Date.prototype.getWeek = function() {
   var date = new Date(this.getTime());
@@ -28,19 +32,17 @@ const Tec_upd = ({match}) => {
     const [taskCost, setTaskCost] = useState('')
     const [taskCal, setTaskCal] = useState('')
     const [metr, setMetr] = useState('')
-    const [count, setCount] = useState(0)
-    const [period, setPeriod] = useState(0)
+    const [count, setCount] = useState('')
+    const [period, setPeriod] = useState('')
     const [cal, setCal] = useState([])
     const [cst, setCst] = useState([])
-    const [calendar, setCalendar] = useState([])
     const [docs, setDocs] = useState([])
-    const [cost, setCost] = useState([])
-    const [setFile] = useState()
+    const [last, setLast] = useState(0)
+    const [file, setFile] = useState()
 
 
     const dispatch = useDispatch()
     const tzDetails = useSelector(state => state.tzDetails)
-    const {tech} = tzDetails
   
     const history = useHistory()
     const selectList = useSelector(state => state.selectList)
@@ -53,36 +55,128 @@ const Tec_upd = ({match}) => {
     useEffect(() => {
         dispatch(listTechDetails(match.params.tz_id))
       }, [dispatch, match])
+      
+    const {tech} = tzDetails
 
     useEffect(() => {
-        setCst(tech.cst)
-        setCal(tech.cal)
-    })
+      let costs = []
+      tech.cst ?  costs = [...tech.cst] : costs = []
+      costs.forEach(element => {
+        element.active = true
+      });
+      let cals = []
+      tech.cal ? cals = [...tech.cal] : cals = []
+      cals.forEach(element => {
+        element.active = true
+      });
+        setCst(costs)
+        setCal(cals)
+    }, [tech.cst, tech.cal])
 
     const {data} = selectList
+    
 
     const onClickCost = () => {
-      let costs = [...cost]
+      if (taskCost === '') {
+        alert('Наименование работ не может быть пустым')
+        return
+      }
+      if (metr === '') {
+        alert('Заполните поле единиц измерения')
+        return
+      }
+      if (count === '') {
+        alert('Заполните поле количества')
+        return
+      }
+      let costs = [...cst]
       costs.push({
         task: taskCost, 
         metr: metr, 
-        count: parseInt(count)
+        count: parseInt(count),
+        active: true,
       })
-      setCost(costs)
+      setCst(costs)
+      setTaskCost('')
+      setMetr('')
+      setCount('')
 
     }
     const onClickCalendars = () => {
-      let calendars = [...calendar]
+      setLast(parseInt(last) + parseInt(period))
+
+      if (taskCal===''){
+        alert('Наименование работ не может быть пустым')
+        return
+      }
+      if (period===''){
+        alert('Введите длительность работ в календарных неделях')
+        return
+      }
+      let calendars = [...cal]
+      let t = 0
+
+      if (end_date!=='') {
+        t = parseInt(new Date(end_date).getWeek()) + parseInt(period) + parseInt(last)
+        if (t > 52){
+          t = t - 52
+        }
+      }else {
+        t = parseInt(new Date(tech.end_date).getWeek()) + parseInt(period) + parseInt(last)
+        if (t > 52){
+          t = t - 52
+        }
+      }
       calendars.push({
         task_name: taskCal, 
         period: parseInt(period), 
-        term: 0
+        term: t,
+        active: true,
       })
-      setCalendar(calendars)
+      setCal(calendars)
+      setTaskCal('')
+      setPeriod('')
+    }
+
+    const onClickDecline = (e) => { 
+      alert('Все введенные данные будут стерты')
+      setProj('')
+      setGroup('')
+      setType('')
+      setKind('')
+      setTask('')
+      setPay_cond('')
+      setEnd_date('')
+      setInfo('')
+      setTaskCost('')
+      setTaskCal('')
+      setMetr('')
+      setCount('')
+      setPeriod('')
+    } 
+
+    const onClickCostAccDelete = (e) => {
+      if(cst[e.target.id].active){
+        cst[e.target.id].active = false
+        e.target.src = plus
+      } else {
+        cst[e.target.id].active = true
+        e.target.src = x
+      }
+    }
+
+    const onClickCalAccDelete = (e) => {
+      if(cal[e.target.id].active){
+        cal[e.target.id].active = false
+        e.target.src = plus
+      } else {
+        cal[e.target.id].active = true
+        e.target.src = x
+      }
     }
 
     const onClickAccept = () => {
-        let hi = ''
+      let hi = ''
         let proj_ = ''
         if (proj !== ''){ 
             proj_ = proj
@@ -167,37 +261,9 @@ const Tec_upd = ({match}) => {
             docs_ = cal
         }*/
 
-        dispatch(tzUpdate(parseInt(match.params.tz_id), proj_, group_, type_, kind_, task_, pay_cond_, end_date_, info_, calendar, cost, hi+tech.history))
+        dispatch(tzUpdate(parseInt(match.params.tz_id), proj_, group_, type_, kind_, task_, pay_cond_, end_date_, info_, cal, cst, hi+tech.history))
         console.log(pay_cond_)
         history.push('/tech/')
-    }
-
-    const onClickCstDel = (e) => {
-        let costs = [...cst]
-
-        let i = e.target.id
-
-        const his = " \n Удалена стоимость: " + costs[i].task + " Дата: " + new Date().toISOString().slice(0, 10) + tech.history
-        
-        dispatch(deleteCst(match.params.tz_id, costs[i].task, his))
-
-        document.getElementById(e.target.id).innerHTML = 'Удалено'
-        document.getElementById(e.target.id).setAttribute('disabled', true)
-    }
-
-    const onClickCalDel = (e) => {
-        let calendars = [...cal]
-
-        let i = e.target.id-100000
-
-        console.log(calendars[i].task_name)
-
-        const his = " \n Удален график: " + calendars[i].task_name + " Дата: " + new Date().toISOString().slice(0, 10) + tech.history
-        
-        dispatch(deleteCal(match.params.tz_id, calendars[i].task_name, his))
-
-        document.getElementById(e.target.id).innerHTML = 'Удалено'
-        document.getElementById(e.target.id).setAttribute('disabled', true)
     }
 
     const onClickDocs= (e) => {
@@ -343,7 +409,7 @@ const Tec_upd = ({match}) => {
             <tr>
               <td>Дата завершения сбора КП</td>
               <td>
-              <Badge bg="secondary">{tech.end_date?tech.end_date.slice(0,10):''}</Badge>
+              <label>{tech.end_date?tech.end_date.slice(0,10):''} - Предыдущая дата</label>
               <InputMask mask="9999-99-99" value={end_date} onChange={(e)=>setEnd_date(e.target.value)} className='cr_input' alwaysShowMask='true'/>
               </td>
             </tr>
@@ -351,7 +417,7 @@ const Tec_upd = ({match}) => {
               <td>Доступ к данным ТЗ</td>
               <td>
               
-              { tech.privacy=='true' ? "Для доверенных поставщиков" : "Открыт"}</td>
+              { tech.privacy ==='true' ? "Для доверенных поставщиков" : "Открыт"}</td>
                  
             </tr>
             <tr>
@@ -376,115 +442,136 @@ const Tec_upd = ({match}) => {
           <h5 className="text-start">Описание работ</h5>
           <textarea className='cr_input' name='adress' value={info} onChange={(e)=>setInfo(e.target.value)} placeholder={tech.info}></textarea>
 
+
+
           <h5 className="text-start">Разбивка стоимости</h5>
-          <table className="table w-25" id="cost_table">
+          <table className="table w-50" id="cost_table">
     <thead>
       <tr className="org_head">
         <th>Наименование работ</th>
         <th>Единицы измерения</th>
         <th>Кол-во</th>
-        <th></th>
       </tr>
     </thead>
     <tbody>
     {cst ? cst.map((item, i)=>{
         return(
-          <tr>
-            <td>{item.task}</td>
-            <td>{item.metr}</td>
-            <td>{item.count}</td>
-            <td><button type="button" className="btn btn-outline-dark" onClick={onClickCstDel} id={i}>Удалить</button></td>
+          <tr key={'q'+i} >
+            <td key={'qq'+i}>{item.task}</td>
+            <td key={'qqq'+i}>{item.metr}</td>
+            <td key={'qqqq'+i}>{item.count}</td>
+            <td key={'qqqqq'+i}>
+              <Button key={'qqqqqq'+i} variant='light' className="main_button btn btn-outline-dark" onClick={onClickCostAccDelete}>
+                <img id={i} key={'qqqqqqq'+i} src={x} alt="Accept" width="32" height="32"/>
+              </Button>
+              </td>
           </tr>
-        )}) : <tr><td></td></tr>
-      }
-       {cost ? cost.map((item, i)=>{
-        return(
-          <tr>
-            <td>{item.task}</td>
-            <td>{item.metr}</td>
-            <td>{item.count}</td>
-          </tr>
-        )}) : <tr><td></td></tr>
+        )}) : 'Список пуст'
       }
       <tr>
         <td>
-        {data.tasks ? 
-              <select className="form-select cr_input" name="dir" id="selector" value={taskCost} onChange={(e)=>setTaskCost(e.target.value)} placeholder='Не выбрано'>
-                {data.tasks.map((item, i) => { return(
-                <option value={item}>{item}</option>
-                )})}
-                </select> : <label>Список пуст</label>}
-              <input className='cr_input' name='task_name' value={taskCost} onChange={(e)=>setTaskCost(e.target.value)}></input>
+        <Dropdown> 
+                <InputGroup className="mb-3">
+              <Form.Control className='cr_input'  value={taskCost} onChange={(e)=>setTaskCost(e.target.value)}/>
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" drop='end' value={taskCost}/>
+
+                <Dropdown.Menu align={{ lg: 'end' }}>
+                  {data.tasks ? data.tasks.map((item, i) => { return(
+                    <Dropdown.Item key={'w'+i} value={item} onSelect={(e)=>setTaskCost(item)}>{item}</Dropdown.Item>
+                    )}): 'Список пуст'}
+                </Dropdown.Menu>    
+                </InputGroup>
+              </Dropdown>
         </td>
         <td>
-        {data.metrics ? 
-              <select className="form-select cr_input" name="dir" id="selector" value={metr} onChange={(e)=>setMetr(e.target.value)} placeholder='Не выбрано'>
-                {data.metrics.map((item, i) => { return(
-                <option value={item}>{item}</option>
-                )})}
-                </select> : <label>Список пуст</label>}
-              <input className='cr_input' name='task_name' value={metr} onChange={(e)=>setMetr(e.target.value)}></input>
+        <Dropdown> 
+                <InputGroup className="mb-3">
+              <Form.Control className='cr_input'  value={metr} onChange={(e)=>setMetr(e.target.value)}/>
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" drop='end' value={metr}/>
+
+                <Dropdown.Menu align={{ lg: 'end' }}>
+                  {data.metrics ? data.metrics.map((item, i) => { return(
+                    <Dropdown.Item key={'e'+i} value={item} onSelect={(e)=>setMetr(item)}>{item}</Dropdown.Item>
+                    )}): 'Список пуст'}
+                </Dropdown.Menu>    
+                </InputGroup>
+              </Dropdown>
         </td>
-        <td><input className='cr_input' name='pay_cond' value={count} onChange={(e)=>setCount(e.target.value)}></input></td>
-      
-      
-        <td colSpan="3"><button type="button" className="btn btn-outline-dark" onClick={onClickCost}>Добавить</button></td>
-</tr>
+        <td><InputMask mask='999999999999' maskChar={null} className='cr_input' value={count} onChange={(e)=>setCount(e.target.value)}></InputMask></td>
+      <td colSpan="3">
+        <button type="button" className="main_button btn btn-outline-dark" onClick={onClickCost}>
+          <img src={check} alt="Accept" width="32" height="32"/>
+        </button>
+        </td>
+      </tr>
+        
     </tbody>
     </table>
 
-
-  <h5 className="text-start">График выполнения работ</h5>
-  <table className="table w-25" id="cal_table">
+    <h5 className="text-start">График выполнения работ</h5>
+  <table className="table w-50" id="cal_table">
     <thead>
       <tr className="org_head">
         <th>Наименование работ</th>
-        <th>Требования клиента</th>
-        <th></th>
+        <th colSpan="2">Требования клиента</th>
       </tr>
       <tr className="org_head">
         <th></th>
         <th>Период, КН</th>
-        <th></th>
+        <th>Срок</th>
       </tr>
     </thead>
     <tbody>
-    {cal ? cal.map((item,i)=>{
+    {cal ? cal.map((item, i)=>{
         return(
-          <tr>
-            <td>{item.task_name}</td>
-            <td>{item.period}</td>
-            <td> <button type="button" className="btn btn-outline-dark" onClick={onClickCalDel} id={100000+i}>Удалить</button></td>
+          <tr key={'z'+i}>
+            <td key={'zz'+i}>{item.task_name}</td>
+            <td key={'zzz'+i}>{item.period}</td>
+            <td key={'zzzz'+i}>{item.term}</td>
+            <td key={'zzzzz'+i}>
+              <Button key={'zzzzzq'+i} variant='light' className="main_button btn btn-outline-dark" onClick={onClickCalAccDelete}>
+                <img id={i} key={'zzzzzqq'+i} src={x} alt="Accept" width="32" height="32"/>
+              </Button>
+              </td>
           </tr>
-        )}) : <tr><td></td></tr>
-      }
-      {calendar ? calendar.map((item,i)=>{
-        return(
-          <tr>
-            <td>{item.task_name}</td>
-            <td>{item.period}</td>
-          </tr>
-        )}) : <tr><td></td></tr>
+        )}) : ''
       }
     <tr>
         <td>
-                {data.task_names ? 
-              <select className="form-select cr_input" name="dir" id="selector" value={taskCal} onChange={(e)=>setTaskCal(e.target.value)} placeholder='Не выбрано'>
-                {data.task_names.map((item, i) => { return(
-                <option value={item}>{item}</option>
-                )})}
-                </select> : <label>Список пуст</label>}
-              <input className='cr_input' name='task_name' value={taskCal} onChange={(e)=>setTaskCal(e.target.value)}></input>
-        </td>
-        <td><input className='cr_input' name='pay_cond' value={period} pattern="[0-9]*" onChange={(e)=>setPeriod(e.target.value)}></input></td>
-    
+        <Dropdown> 
+                <InputGroup className="mb-3">
+              <Form.Control className='cr_input'  value={taskCal} onChange={(e)=>setTaskCal(e.target.value)}/>
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" drop='end' value={taskCal}/>
 
-        <td colSpan="3"><button type="button" className="btn btn-outline-dark" onClick={onClickCalendars}>Добавить</button></td>
-  </tr>
+                <Dropdown.Menu align={{ lg: 'end' }}>
+                  {data.task_names ? data.task_names.map((item, i) => { return(
+                    <Dropdown.Item key={'n'+i} value={item} onSelect={(e)=>setTaskCal(item)}>{item}</Dropdown.Item>
+                    )}): 'Список пуст'}
+                </Dropdown.Menu>    
+                </InputGroup>
+              </Dropdown>
+        </td>
+        <td>
+        <InputMask mask='999999999999' maskChar={null} className='cr_input' value={period} onChange={(e)=>setPeriod(e.target.value)}></InputMask>
+        </td>
+        <td>{end_date ==='' ? period ==='' ? 'Заполните конечную дату и период' : 
+        parseInt(new Date(tech.end_date).getWeek())+parseInt(period)+ parseInt(last) >52 ? 
+        parseInt(new Date(tech.end_date).getWeek())+parseInt(period)+ parseInt(last)-52:parseInt(new Date(tech.end_date).getWeek())+parseInt(period)+ parseInt(last):
+        parseInt(new Date(end_date).getWeek())+parseInt(period)+ parseInt(last) >52 ? 
+        parseInt(new Date(end_date).getWeek())+parseInt(period)+ parseInt(last)-52:parseInt(new Date(end_date).getWeek())+parseInt(period)+ parseInt(last)}</td>
+        <td colSpan="3">
+          <button type="button" className="main_button btn btn-outline-dark" onClick={onClickCalendars}>
+          <img src={check} alt="Accept" width="32" height="32"/>
+          </button>
+          </td>
+        </tr>
     </tbody>
 </table>
 </div>
-<button type="button" className="btn btn-outline-dark" onClick={onClickAccept}>Подтвердить</button>
+<div className='enter'>
+  <button type="button" className="btn btn-outline-dark" onClick={onClickAccept}><h3>Подтвердить</h3></button>
+  <button type="button" className="btn btn-outline-dark" onClick={onClickDecline}><h3>Отменить</h3></button>
+</div>
 </div>
 )
   }
