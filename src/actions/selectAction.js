@@ -17,7 +17,7 @@ export const listSelect = () => async(dispatch) => {
         mode: 'cors'
     }
   
-      const { data } = await axios.get('http://127.0.0.1:8000/api/techs/select', config)
+      const { data } = await axios.get('http://80.87.202.222:8000/api/techs/select', config)
   
       dispatch({
         type: SELECT_ALL_SUCCESS,
@@ -48,7 +48,7 @@ export const listSelect = () => async(dispatch) => {
         mode: 'cors'
     }
   
-      const { data } = await axios.get('http://127.0.0.1:8000/api/orgs/select', config)
+      const { data } = await axios.get('http://80.87.202.222:8000/api/orgs/select', config)
   
       dispatch({
         type: SELECT_SPECS_SUCCESS,
@@ -75,7 +75,7 @@ export const listSelect = () => async(dispatch) => {
         mode: 'cors'
     }
   
-      const { data } = await axios.get('http://127.0.0.1:8000/auth/countries', config)
+      const { data } = await axios.get('http://80.87.202.222:8000/auth/countries', config)
   
       dispatch({
         type: SELECT_COUNTRY_SUCCESS,
@@ -100,7 +100,7 @@ export const listSelect = () => async(dispatch) => {
         mode: 'cors'
     }
   
-      const {data} = await axios.get(`http://127.0.0.1:8000/auth/login`, config)
+      const {data} = await axios.get(`http://80.87.202.222:8000/auth/login`, config)
   
       dispatch({
         type: SELECT_LOGIN_SUCCESS,
@@ -130,7 +130,7 @@ export const listSelect = () => async(dispatch) => {
         mode: 'cors'
     }
   
-      const { data } = await axios.get('http://127.0.0.1:8000/api/cps/payconds/', config)
+      const { data } = await axios.get('http://80.87.202.222:8000/api/cps/payconds/', config)
   
       dispatch({
         type: SELECT_PAY_CONDS_SUCCESS,

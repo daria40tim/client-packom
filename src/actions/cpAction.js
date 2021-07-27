@@ -1,7 +1,7 @@
 import axios from "axios"
 import { CP_CREATE_FAIL, CP_CREATE_REQUEST, CP_CREATE_SUCCESS, CP_DELETE_CAL_FAIL, CP_DELETE_CAL_REQUEST, CP_DELETE_CAL_SUCCESS, CP_DELETE_CST_FAIL, CP_DELETE_CST_REQUEST, CP_DELETE_CST_SUCCESS, CP_DETAILES_FAIL, CP_DETAILES_REQUEST, CP_DETAILES_SUCCESS, CP_LIST_FAIL, CP_LIST_REQUEST, CP_LIST_SORTEDBY_CP_ID, CP_LIST_SORTEDBY_DATE, CP_LIST_SORTEDBY_ORG, CP_LIST_SORTEDBY_STATUS, CP_LIST_SORTEDBY_TZ_ID, CP_LIST_SORT_FAIL, CP_LIST_SORT_SUCCESS, CP_LIST_SUCCESS, CP_UPDATE_FAIL, CP_UPDATE_REQUEST, CP_UPDATE_SUCCESS, DOWN_CP_DOC_FAIL, DOWN_CP_DOC_REQUEST, DOWN_CP_DOC_SUCCESS, GET_CP_FILTER_DATA_FAIL, GET_CP_FILTER_DATA_REQUEST, GET_CP_FILTER_DATA_SUCCESS } from "../constants/cpConstants"
 
-export const listCPs = (s_date, e_date, orgs, projs, tz_ids, cp_sts) => async(dispatch) => {
+export const listCPs = () => async(dispatch) => {
     try {
 
         const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
@@ -17,7 +17,7 @@ export const listCPs = (s_date, e_date, orgs, projs, tz_ids, cp_sts) => async(di
           mode: 'cors'
       }
     
-        const { data } = await axios.post('http://127.0.0.1:8000/api/cps/job/', {s_date, e_date, orgs, projs, tz_ids, cp_sts}, config)
+        const { data } = await axios.get('http://80.87.202.222:8000/api/cps/',config)
     
         dispatch({
           type: CP_LIST_SUCCESS,
@@ -49,7 +49,7 @@ export const listCPs = (s_date, e_date, orgs, projs, tz_ids, cp_sts) => async(di
         mode: 'cors'
     }
   
-      const { data } = await axios.get(`http://127.0.0.1:8000/api/cps/${id}`, config)
+      const { data } = await axios.get(`http://80.87.202.222:8000/api/cps/${id}`, config)
   
       dispatch({
         type: CP_DETAILES_SUCCESS,
@@ -78,7 +78,7 @@ export const listCPs = (s_date, e_date, orgs, projs, tz_ids, cp_sts) => async(di
         mode: 'cors'
     }
   
-      await axios.post(`http://127.0.0.1:8000/api/cps/`, {tz_id, pay_cond, end_date, info, cal, cst, date, docs, proj}, config)
+      await axios.post(`http://80.87.202.222:8000/api/cps/`, {tz_id, pay_cond, end_date, info, cal, cst, date, docs, proj}, config)
   
       dispatch({
         type: CP_CREATE_SUCCESS,
@@ -107,7 +107,7 @@ export const listCPs = (s_date, e_date, orgs, projs, tz_ids, cp_sts) => async(di
         mode: 'cors'
     }
   
-      await axios.put(`http://127.0.0.1:8000/api/cps/${cp_id}`, {pay_cond, end_date, info, cal, cst, docs, history}, config)
+      await axios.put(`http://80.87.202.222:8000/api/cps/${cp_id}`, {pay_cond, end_date, info, cal, cst, docs, history}, config)
   
       dispatch({
         type: CP_UPDATE_SUCCESS,
@@ -136,7 +136,7 @@ export const listCPs = (s_date, e_date, orgs, projs, tz_ids, cp_sts) => async(di
         mode: 'cors'
     }
   
-      await axios.post(`http://127.0.0.1:8000/api/cps/delete_cal`, cp_id, config)
+      await axios.post(`http://80.87.202.222:8000/api/cps/delete_cal`, cp_id, config)
   
       dispatch({
         type: CP_DELETE_CAL_SUCCESS,
@@ -165,7 +165,7 @@ export const listCPs = (s_date, e_date, orgs, projs, tz_ids, cp_sts) => async(di
         mode: 'cors'
     }
   
-      await axios.post(`http://127.0.0.1:8000/api/cps/delete_cst`, cp_id, config)
+      await axios.post(`http://80.87.202.222:8000/api/cps/delete_cst`, cp_id, config)
   
       dispatch({
         type: CP_DELETE_CST_SUCCESS,
@@ -324,7 +324,7 @@ export const listCPs = (s_date, e_date, orgs, projs, tz_ids, cp_sts) => async(di
         responseType: 'blob'
     }
   
-      await axios.get(`http://127.0.0.1:8000/api/cps/doc/${name}/${cp_id}`, config)
+      await axios.get(`http://80.87.202.222:8000/api/cps/doc/${name}/${cp_id}`, config)
       .then(({ data }) => {
         const downloadUrl = window.URL.createObjectURL(new Blob([data]));
         const link = document.createElement('a');
@@ -395,7 +395,7 @@ export const listCPs = (s_date, e_date, orgs, projs, tz_ids, cp_sts) => async(di
         mode: 'cors'
     }
   
-      const { data } = await axios.get('http://127.0.0.1:8000/api/cps/filter', config)
+      const { data } = await axios.get('http://80.87.202.222:8000/api/cps/filter', config)
   
       dispatch({
         type: GET_CP_FILTER_DATA_SUCCESS,

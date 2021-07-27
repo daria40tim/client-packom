@@ -17,7 +17,7 @@ export const listTenders = (s_date, e_date, projs, tz_ids, tender_sts) => async(
           mode: 'cors'
       }
     
-        const { data } = await axios.post('http://127.0.0.1:8000/api/tenders/job/', {s_date, e_date, projs, tz_ids, tender_sts}, config)
+        const { data } = await axios.post('http://80.87.202.222:8000/api/tenders/job/', {s_date, e_date, projs, tz_ids, tender_sts}, config)
     
         dispatch({
           type: TENDER_LIST_SUCCESS,
@@ -48,7 +48,7 @@ export const listTenders = (s_date, e_date, projs, tz_ids, tender_sts) => async(
         mode: 'cors'
     }
   
-      const { data } = await axios.get(`http://127.0.0.1:8000/api/tenders/${id}`, config)
+      const { data } = await axios.get(`http://80.87.202.222:8000/api/tenders/${id}`, config)
   
       dispatch({
         type: TENDER_SUCCESS,
@@ -80,7 +80,7 @@ export const listTenders = (s_date, e_date, projs, tz_ids, tender_sts) => async(
           mode: 'cors'
       }
     
-        const { data } = await axios.get('http://127.0.0.1:8000/api/tenders/min',tz_id, config)
+        const { data } = await axios.get('http://80.87.202.222:8000/api/tenders/min',tz_id, config)
     
         dispatch({
           type: FULLCOSTS_SUCCESS,
@@ -110,7 +110,7 @@ export const decideTender = (tender_id, selected_cp, tz_id) => async(dispatch) =
       mode: 'cors'
   }
 
-    await axios.put(`http://127.0.0.1:8000/api/tenders/decide`, {tender_id,selected_cp, tz_id}, config)
+    await axios.put(`http://80.87.202.222:8000/api/tenders/decide`, {tender_id,selected_cp, tz_id}, config)
 
     dispatch({
       type: TENDER_DECIDE_SUCCESS,
@@ -268,7 +268,7 @@ export const tenderFilterData = () => async(dispatch) => {
       mode: 'cors'
   }
 
-    const { data } = await axios.get('http://127.0.0.1:8000/api/tenders/filter', config)
+    const { data } = await axios.get('http://80.87.202.222:8000/api/tenders/filter', config)
 
     dispatch({
       type: GET_TENDER_FILTER_DATA_SUCCESS,

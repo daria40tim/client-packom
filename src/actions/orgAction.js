@@ -17,7 +17,7 @@ export const listOrg = (names, groups, specs, countries) => async(dispatch) => {
       mode: 'cors'
   }
 
-    const { data } = await axios.post('http://127.0.0.1:8000/api/orgs/job/', {names, groups, specs, countries}, config)
+    const { data } = await axios.post('http://80.87.202.222:8000/api/orgs/job/', {names, groups, specs, countries}, config)
 
     dispatch({
       type: ORG_LIST_SUCCESS,
@@ -48,7 +48,7 @@ export const listOrgDetails = (id) => async(dispatch) => {
       mode: 'cors'
   }
 
-    const { data } = await axios.get(`http://127.0.0.1:8000/api/orgs/${id}`, config)
+    const { data } = await axios.get(`http://80.87.202.222:8000/api/orgs/${id}`, config)
 
     dispatch({
       type: ORG_SUCCESS,
@@ -109,7 +109,7 @@ export const listOrgDetailsUpdate = (adress, phone, email, site, spec, password,
       mode: 'cors'
   }
 
-    await axios.put(`http://127.0.0.1:8000/api/orgs/`, {adress, phone, email, site, spec, password, info, history}, config)
+    await axios.put(`http://80.87.202.222:8000/api/orgs/`, {adress, phone, email, site, spec, password, info, history}, config)
 
     dispatch({
       type: ORG_UPDATE_SUCCESS,
@@ -138,7 +138,7 @@ export const listOrgAdd = (id) => async(dispatch) => {
       mode: 'cors'
   }
 
-    await axios.put(`http://127.0.0.1:8000/api/orgs/${id}`,{}, config)
+    await axios.put(`http://80.87.202.222:8000/api/orgs/${id}`,{}, config)
 
     dispatch({
       type: ADD_ORG_SUCCESS,
@@ -262,7 +262,7 @@ export const listOrgAddDoc = (data) => async(dispatch) => {
       mode: 'cors'
   }
 
-    await axios.post(`http://127.0.0.1:8000/api/orgs/docs`,{data: data}, config)
+    await axios.post(`http://80.87.202.222:8000/api/orgs/docs`,{data: data}, config)
 
     dispatch({
       type: ADD_ORG_DOC_SUCCESS,
@@ -289,7 +289,7 @@ export const listOrgDownDoc = (name, o_id) => async(dispatch) => {
       responseType: 'blob'
   }
 
-    await axios.get(`http://127.0.0.1:8000/api/orgs/doc/${name}/${o_id}`, config)
+    await axios.get(`http://80.87.202.222:8000/api/orgs/doc/${name}/${o_id}`, config)
     .then(({ data }) => {
       const downloadUrl = window.URL.createObjectURL(new Blob([data]));
       const link = document.createElement('a');
@@ -328,7 +328,7 @@ export const deleteTrusted = (id) => async(dispatch) => {
       mode: 'cors'
   }
 
-    const { data } = await axios.get(`http://127.0.0.1:8000/api/orgs/delete/${id}`, config)
+    const { data } = await axios.get(`http://80.87.202.222:8000/api/orgs/delete/${id}`, config)
 
     dispatch({
       type: DEL_TRUSTED_ORG_SUCCESS,
@@ -359,7 +359,7 @@ export const orgFilterData = () => async(dispatch) => {
       mode: 'cors'
   }
 
-    const { data } = await axios.get('http://127.0.0.1:8000/api/orgs/filter', config)
+    const { data } = await axios.get('http://80.87.202.222:8000/api/orgs/filter', config)
 
     dispatch({
       type: GET_ORG_FILTER_DATA_SUCCESS,

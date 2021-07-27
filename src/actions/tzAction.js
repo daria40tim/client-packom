@@ -17,7 +17,7 @@ export const listTechs = (s_date, e_date, clients, projs, tz_sts, tender_sts, cp
       mode: 'cors'
   }
 
-    const { data } = await axios.post('http://127.0.0.1:8000/api/techs/job/', {s_date, e_date, clients, projs, tz_sts, tender_sts, cp_sts} ,config)
+    const { data } = await axios.post('http://80.87.202.222:8000/api/techs/job/', {s_date, e_date, clients, projs, tz_sts, tender_sts, cp_sts} ,config)
 
     dispatch({
       type: TZ_LIST_SUCCESS,
@@ -48,7 +48,7 @@ export const listTechDetails = (id) => async(dispatch) => {
       mode: 'cors'
   }
 
-    const { data } = await axios.get(`http://127.0.0.1:8000/api/techs/${id}`, config)
+    const { data } = await axios.get(`http://80.87.202.222:8000/api/techs/${id}`, config)
 
     dispatch({
       type: TZ_DETAILS_SUCCESS,
@@ -76,7 +76,7 @@ export const createTZ = (proj, group, type, kind, task, pay_cond, end_date, priv
       mode: 'cors'
   }
 
-    await axios.post(`http://127.0.0.1:8000/api/techs/`, {proj, group, type, kind, task, pay_cond, end_date, privacy, info, cal, cst, date, docs}, config)
+    await axios.post(`http://80.87.202.222:8000/api/techs/`, {proj, group, type, kind, task, pay_cond, end_date, privacy, info, cal, cst, date, docs}, config)
 
     dispatch({
       type: TZ_CREATE_SUCCESS,
@@ -104,7 +104,7 @@ export const deleteCal = (tz_id, task_name, history) => async(dispatch) => {
       mode: 'cors'
   }
 
-    await axios.post(`http://127.0.0.1:8000/api/techs/delete_cal`, {tz_id, task_name, history}, config)
+    await axios.post(`http://80.87.202.222:8000/api/techs/delete_cal`, {tz_id, task_name, history}, config)
 
     dispatch({
       type: TZ_DELETE_CAL_SUCCESS,
@@ -133,7 +133,7 @@ export const deleteCst = (tz_id, task, history) => async(dispatch) => {
       mode: 'cors'
   }
 
-    await axios.post(`http://127.0.0.1:8000/api/techs/delete_cst`, {tz_id, task, history}, config)
+    await axios.post(`http://80.87.202.222:8000/api/techs/delete_cst`, {tz_id, task, history}, config)
 
     dispatch({
       type: TZ_DELETE_CST_SUCCESS,
@@ -162,7 +162,7 @@ export const tzUpdate = (tz_id, proj, group, type, kind, task, pay_cond, end_dat
       mode: 'cors'
   }
 
-    await axios.post(`http://127.0.0.1:8000/api/techs/${tz_id}`, {proj, group, type, kind, task, pay_cond, end_date, info, cal, cst, history}, config)
+    await axios.post(`http://80.87.202.222:8000/api/techs/${tz_id}`, {proj, group, type, kind, task, pay_cond, end_date, info, cal, cst, history}, config)
 
     dispatch({
       type: TZ_UPDATE_SUCCESS,
@@ -356,7 +356,7 @@ export const uploadFile = (formData) => async(dispatch) => {
       mode: 'cors'
   }
 
-    await axios.post(`http://127.0.0.1:8000/api/techs/docs`, {formData}, config)
+    await axios.post(`http://80.87.202.222:8000/api/techs/docs`, {formData}, config)
 
     dispatch({
       type: TZ_FILE_UPLOAD_SUCCESS,
@@ -383,7 +383,7 @@ export const listTzDownDoc = (name, tz_id) => async(dispatch) => {
       responseType: 'blob'
   }
 
-    await axios.get(`http://127.0.0.1:8000/api/techs/doc/${name}/${tz_id}`, config)
+    await axios.get(`http://80.87.202.222:8000/api/techs/doc/${name}/${tz_id}`, config)
     .then(({ data }) => {
       const downloadUrl = window.URL.createObjectURL(new Blob([data]));
       const link = document.createElement('a');
@@ -486,7 +486,7 @@ export const techFilterData = () => async(dispatch) => {
       mode: 'cors'
   }
 
-    const { data } = await axios.get('http://127.0.0.1:8000/api/techs/filter', config)
+    const { data } = await axios.get('http://80.87.202.222:8000/api/techs/filter', config)
 
     dispatch({
       type: GET_TECH_FILTER_DATA_SUCCESS,

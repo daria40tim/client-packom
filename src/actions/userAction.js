@@ -19,7 +19,7 @@ export const login = (email, password) => async (dispatch) => {
         }
 
         const {data} = await axios.post(
-            'http://127.0.0.1:8000/auth/sign-in', 
+            'http://80.87.202.222:8000/auth/sign-in', 
             {email, password},
             config
             )
@@ -65,7 +65,7 @@ export const register = (email, name, password, group_id, countries) => async (d
         }
 
         const {data} = await axios.post(
-            'http://127.0.0.1:8000/auth/sign-up', 
+            'http://80.87.202.222:8000/auth/sign-up', 
             {email, name, password, group_id, countries},
             config
             )
