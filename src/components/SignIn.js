@@ -1,6 +1,5 @@
 import React, {useState } from 'react';
 import '../styles/login.css'
-import logo from '../pic/logo.svg' 
 import {login} from '../actions/userAction'
 import {useDispatch, useSelector} from 'react-redux'
 import Message from './Message';
@@ -36,7 +35,6 @@ const SignIn = () =>  {
     return( 
         <div>
         <form onSubmit={submitHandler} className="form-signin">
-        <img className="mb-4" src={logo} alt="" width="200" height="72"/>
         <h1 className="h3 mb-3 font-weight-normal">Войдите в систему</h1>
 
         {error && <Message variant='danger'>{error}</Message>}
