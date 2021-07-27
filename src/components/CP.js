@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link, withRouter} from 'react-router-dom';
 import { listCPs, sortCPByDate, sortCPById, sortCPByOrg, sortCPByStatus, sortCPByTzId } from '../actions/cpAction';
-import Filters from './Filters';
+import CpFilters from './CpFilters';
 import Loader from './Loader';
 import Message from './Message';
 
@@ -54,11 +54,10 @@ const C = () => {
         <div ><Loader/>
         </div>
         ) : error ? <Message variant='danger'>{error}</Message> :
-        cps ? 
         <table className="table main_table">
         <tr>
             <td valign="top" align="justify">
-     <Filters></Filters>
+     <CpFilters></CpFilters>
 
 
 </td>
@@ -107,7 +106,7 @@ const C = () => {
       </tr>
     </thead>
     <tbody>
-      {cps.map((item, i)=>{
+      {cps ? cps.map((item, i)=>{
         return (
       <tr>
         <td>
@@ -131,14 +130,14 @@ const C = () => {
         <td>{item.type}</td>
         <td>{item.kind}</td>
         <td>{item.task_name}</td>
-      </tr>)})}
+      </tr>)}) : "Предложений нет"}
     </tbody>
   </table> 
  
 </div>
  </td>
  </tr>
-</table> : <Message variant='sucess'><h1>Предложений нет</h1></Message>}
+</table>}
 </div>
 )
 }

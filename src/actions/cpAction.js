@@ -1,7 +1,7 @@
 import axios from "axios"
-import { CP_CREATE_FAIL, CP_CREATE_REQUEST, CP_CREATE_SUCCESS, CP_DELETE_CAL_FAIL, CP_DELETE_CAL_REQUEST, CP_DELETE_CAL_SUCCESS, CP_DELETE_CST_FAIL, CP_DELETE_CST_REQUEST, CP_DELETE_CST_SUCCESS, CP_DETAILES_FAIL, CP_DETAILES_REQUEST, CP_DETAILES_SUCCESS, CP_LIST_FAIL, CP_LIST_REQUEST, CP_LIST_SORTEDBY_CP_ID, CP_LIST_SORTEDBY_DATE, CP_LIST_SORTEDBY_ORG, CP_LIST_SORTEDBY_STATUS, CP_LIST_SORTEDBY_TZ_ID, CP_LIST_SORT_FAIL, CP_LIST_SORT_SUCCESS, CP_LIST_SUCCESS, CP_UPDATE_FAIL, CP_UPDATE_REQUEST, CP_UPDATE_SUCCESS, DOWN_CP_DOC_FAIL, DOWN_CP_DOC_REQUEST, DOWN_CP_DOC_SUCCESS } from "../constants/cpConstants"
+import { CP_CREATE_FAIL, CP_CREATE_REQUEST, CP_CREATE_SUCCESS, CP_DELETE_CAL_FAIL, CP_DELETE_CAL_REQUEST, CP_DELETE_CAL_SUCCESS, CP_DELETE_CST_FAIL, CP_DELETE_CST_REQUEST, CP_DELETE_CST_SUCCESS, CP_DETAILES_FAIL, CP_DETAILES_REQUEST, CP_DETAILES_SUCCESS, CP_LIST_FAIL, CP_LIST_REQUEST, CP_LIST_SORTEDBY_CP_ID, CP_LIST_SORTEDBY_DATE, CP_LIST_SORTEDBY_ORG, CP_LIST_SORTEDBY_STATUS, CP_LIST_SORTEDBY_TZ_ID, CP_LIST_SORT_FAIL, CP_LIST_SORT_SUCCESS, CP_LIST_SUCCESS, CP_UPDATE_FAIL, CP_UPDATE_REQUEST, CP_UPDATE_SUCCESS, DOWN_CP_DOC_FAIL, DOWN_CP_DOC_REQUEST, DOWN_CP_DOC_SUCCESS, GET_CP_FILTER_DATA_FAIL, GET_CP_FILTER_DATA_REQUEST, GET_CP_FILTER_DATA_SUCCESS } from "../constants/cpConstants"
 
-export const listCPs = () => async(dispatch) => {
+export const listCPs = (s_date, e_date, orgs, projs, tz_ids, cp_sts) => async(dispatch) => {
     try {
 
         const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
@@ -17,7 +17,7 @@ export const listCPs = () => async(dispatch) => {
           mode: 'cors'
       }
     
-        const { data } = await axios.get('http://127.0.0.1:8000/api/cps/',config)
+        const { data } = await axios.post('http://127.0.0.1:8000/api/cps/job/', {s_date, e_date, orgs, projs, tz_ids, cp_sts}, config)
     
         dispatch({
           type: CP_LIST_SUCCESS,
@@ -374,6 +374,36 @@ export const listCPs = () => async(dispatch) => {
     } catch (error) {
       dispatch({
         type: CP_LIST_SORT_FAIL,
+        payload: error.response && error.response.data.message ? error.response.data.message : error.message
+      })
+    }
+  }
+
+  export const cpFilterData = () => async(dispatch) => {
+    try {
+  
+      const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
+      dispatch({type: GET_CP_FILTER_DATA_REQUEST})
+      let auth = "Bearer " + userInfo.token
+  
+  
+      const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": auth
+        },
+        mode: 'cors'
+    }
+  
+      const { data } = await axios.get('http://127.0.0.1:8000/api/cps/filter', config)
+  
+      dispatch({
+        type: GET_CP_FILTER_DATA_SUCCESS,
+        payload: data.data
+      })
+    } catch (error) {
+      dispatch({
+        type: GET_CP_FILTER_DATA_FAIL,
         payload: error.response && error.response.data.message ? error.response.data.message : error.message
       })
     }

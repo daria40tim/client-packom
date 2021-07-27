@@ -4,9 +4,9 @@ import {orgAddReducer, orgDeleteTrusted, orgDownDocReducer, orgListReducer, orgR
 import {userLoginReducer, userRegisterReducer} from './reducers/userRedusers'
 import {composeWithDevTools} from 'redux-devtools-extension'
 import { selectTechFilterDataReducer, tzCreateReducer, tzDeleteCalReducer, tzDeleteCstReducer, tzDownDocReducer, tzListReducer, tzListSortedReducer, tzReducer } from './reducers/tzReducer'
-import { selectCountriesReducer, selectListReducer, selectLoginReducer, selectSpecsReducer } from './reducers/selectReducer'
-import { cpCreateReducer, cpDeleteCalReducer, cpDeleteCstReducer, cpDownDocReducer, cpListReducer, cpReducer } from './reducers/cpReducers'
-import { fullCostsReducer, tenderDecideReducer, tenderListReducer, tenderListSortedReducer, tenderReducer } from './reducers/tenderReducer'
+import { selectCountriesReducer, selectListReducer, selectLoginReducer, selectPayCondsReducer, selectSpecsReducer } from './reducers/selectReducer'
+import { cpCreateReducer, cpDeleteCalReducer, cpDeleteCstReducer, cpDownDocReducer, cpListReducer, cpReducer, selectCPFilterDataReducer } from './reducers/cpReducers'
+import { fullCostsReducer, selectTenderFilterDataReducer, tenderDecideReducer, tenderListReducer, tenderListSortedReducer, tenderReducer } from './reducers/tenderReducer'
 
 
 const reducer = combineReducers({
@@ -42,6 +42,9 @@ const reducer = combineReducers({
     orgFilterData: selectOrgFilterDataReducer,
     tenderListSorted: tenderListSortedReducer,
     techFilterData: selectTechFilterDataReducer,
+    payCondsList: selectPayCondsReducer,
+    cpFilterData: selectCPFilterDataReducer,
+    tenderFilterData: selectTenderFilterDataReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

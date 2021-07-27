@@ -1,4 +1,4 @@
-import { TENDER_LIST_FAIL, TENDER_LIST_REQUEST, TENDER_LIST_SUCCESS, TENDER_REQUEST,TENDER_SUCCESS,TENDER_FAIL, FULLCOSTS_REQUEST, FULLCOSTS_SUCCESS, FULLCOSTS_FAIL, TENDER_DECIDE_REQUEST, TENDER_DECIDE_SUCCESS, TENDER_DECIDE_FAIL, TENDER_LIST_SORTEDBY_PROJ, TENDER_LIST_SORTEDBY_DATE, TENDER_LIST_SORTEDBY_TZ_ID, TENDER_LIST_SORTEDBY_TENDER_ID, TENDER_LIST_SORTEDBY_STATUS, TENDER_LIST_SORT_FAIL } from "../constants/tenderConstants"
+import { TENDER_LIST_FAIL, TENDER_LIST_REQUEST, TENDER_LIST_SUCCESS, TENDER_REQUEST,TENDER_SUCCESS,TENDER_FAIL, FULLCOSTS_REQUEST, FULLCOSTS_SUCCESS, FULLCOSTS_FAIL, TENDER_DECIDE_REQUEST, TENDER_DECIDE_SUCCESS, TENDER_DECIDE_FAIL, TENDER_LIST_SORTEDBY_PROJ, TENDER_LIST_SORTEDBY_DATE, TENDER_LIST_SORTEDBY_TZ_ID, TENDER_LIST_SORTEDBY_TENDER_ID, TENDER_LIST_SORTEDBY_STATUS, TENDER_LIST_SORT_FAIL, GET_TENDER_FILTER_DATA_REQUEST, GET_TENDER_FILTER_DATA_SUCCESS, GET_TENDER_FILTER_DATA_FAIL } from "../constants/tenderConstants"
 
 export const tenderListReducer = (state = {tenders: []}, action) => {
     switch (action.type) {
@@ -63,6 +63,19 @@ export const tenderListSortedReducer = (state = {tenders:[]}, action) => {
         case TENDER_LIST_SORTEDBY_STATUS:
             return {loading: false, tenders: action.payload}
         case TENDER_LIST_SORT_FAIL:
+            return {loading: false, error: action.payload}
+        default: 
+            return state
+    }
+}
+
+export const selectTenderFilterDataReducer = (state = {data: {tz_ids: [], projs: []}}, action) => {
+    switch (action.type) {
+        case GET_TENDER_FILTER_DATA_REQUEST:
+            return {loading: true, ...state}
+        case GET_TENDER_FILTER_DATA_SUCCESS:
+            return {loading: false, data: action.payload}
+        case GET_TENDER_FILTER_DATA_FAIL:
             return {loading: false, error: action.payload}
         default: 
             return state

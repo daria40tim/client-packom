@@ -4,6 +4,7 @@ import {Link, withRouter} from 'react-router-dom';
 import { listTenders, sortTendersByDate, sortTendersByStatus, sortTendersByTenderId, sortTendersByTZId } from '../actions/tenderAction';
 import Filters from './Filters';
 import Message from './Message';
+import TenderFilters from './TenderFilters';
 
 
 const Tender = () => {
@@ -42,7 +43,7 @@ const Tender = () => {
          <table className="table main_table">
           <tr>
             <td valign="top" align="justify">
-      <Filters></Filters>
+      <TenderFilters></TenderFilters>
 </td>
 
 

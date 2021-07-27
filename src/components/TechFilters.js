@@ -117,8 +117,10 @@ const  TechFilters = () => {
 
     return( 
       <div className="filter">
+        <div className='enter'>
         <button type="button" className="btn btn-outline-dark" onClick={onClick}>Применить</button>
         <button type="button" className="btn btn-outline-dark" onClick={onClickClean}>Очистить</button>
+        </div>
 <div className="accordion" id="accordionPanelsStayOpenExample">
   <div className="accordion-item">
     <h2 className="accordion-header" id="panelsStayOpen-headingOne">

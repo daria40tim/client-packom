@@ -2,6 +2,9 @@ import React, {useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link, useHistory, withRouter} from 'react-router-dom';
 import { listCPDetails, cpUpdate, cpDeleteCal, cpDeleteCst } from '../actions/cpAction';
+import {listPayConds} from '../actions/selectAction'
+import InputMask from "react-input-mask";
+import {Dropdown, Form, InputGroup} from 'react-bootstrap'
 
 
 Date.prototype.getWeek = function() {
@@ -39,8 +42,14 @@ const One_CP = ({match}) =>  {
     dispatch(listCPDetails(match.params.cp_id))
   }, [dispatch, match])
 
+const payCondsList = useSelector(state => state.payCondsList)
 
-    const onClickCst = (e) => {
+useEffect(() => {dispatch(listPayConds())}, [dispatch])
+const {data} = payCondsList
+
+
+
+    /*const onClickCst = (e) => {
         cp.tz_costs.forEach(element => {
             c.push({
                 task: element.task,
@@ -49,10 +58,6 @@ const One_CP = ({match}) =>  {
             })
         });
         for (let index = 0; index < c.length; index++) {
-            if (!Number.isInteger(document.getElementById(index).value)){
-              alert('Поля цен за единицу должны быть целыми')
-              return
-            }
             if (document.getElementById(index).value !== ''){ 
             c[index].ppu = document.getElementById(index).value}
             document.getElementById(index).setAttribute('disabled', true)
@@ -67,7 +72,7 @@ const One_CP = ({match}) =>  {
         dispatch(cpDeleteCst(match.params.cp_id))
         console.log(c[0].ppu)
 
-    }
+    }*/
 
     const onClickDocs= () => {
       var fileInput = document.getElementById("myfileinput");
@@ -99,7 +104,7 @@ const One_CP = ({match}) =>  {
       alert('Документ добавлен')
     }
 
-    const onClickCal = (e) => {
+    /*const onClickCal = (e) => {
         cp.tz_calendars.forEach(element => {
             ca.push({
                 task_name: element.task_name,
@@ -108,10 +113,6 @@ const One_CP = ({match}) =>  {
             })
         });
         for (let index = 0; index < ca.length; index++) {
-          if (!Number.isInteger(document.getElementById(index+200000).value)){
-            alert('Поля периодов должны быть целыми')
-            return
-          }
             if (document.getElementById(index+200000).value !== ''){ 
             ca[index].period = parseInt(document.getElementById(index+200000).value)}
             document.getElementById(index+200000).setAttribute('disabled', true)
@@ -123,7 +124,53 @@ const One_CP = ({match}) =>  {
         
         console.log(ca[0].task_name)
 
+    }*/
+
+    const onPPUChange = (e) => {
+      let id = parseInt(e.target.id.slice(1))
+      cst[id].ppu = parseInt(e.target.value)
+      cst[id].sum = e.target.value*cst[id].count
     }
+    
+    const onInfoChange = (e) => {
+      let id = parseInt(e.target.id.slice(1))
+      cst[id].info = e.target.value
+    }
+    
+    const onPeriodChange = (e) =>{
+      let id = parseInt(e.target.id.slice(1))
+      cal[id].cp_period = parseInt(e.target.value)
+    }
+    useEffect(() => {
+      let c = []
+      if (cp.costs){
+        cp.costs.forEach(i => {
+        c.push({
+          task: i.task,
+          metr: i.metr, 
+          count: i.count,
+          ppu: i.ppu,
+          sum: 0, 
+          info: i.info
+        })
+      });}
+      setCst(c)
+    }, [cp.costs])
+    
+    useEffect(() => {
+      let c = []
+      if (cp.calendars){
+        cp.calendars.forEach(i => {
+        c.push({
+          task_name: i.task_name,
+          period: i.period, 
+          cp_period: i.cp_period,
+        })
+      });}
+      setCal(c)
+    }, [cp.cal])
+
+
     const onClickAccept = (e) => {
         let hi = ''
         let pay_cond_ = ''
@@ -183,20 +230,18 @@ const One_CP = ({match}) =>  {
     return(
         <div className='one_item'>
           <div>
-        <h4 id="name" className="text-center">Общие данные по ТЗ</h4>
-        <h5>Общие данные</h5>
-        <div>
-            <table className="w-100">
+        <div className='table-responsive'>
+            <table className="table w-100">
                 <thead></thead>
                 <tbody>
                     <tr>
                         <td valign='top' align='justify' width="50%">
-        <table className="table w-100 one_item" >
+        <table className="table w-100" >
           <thead>
           </thead>
           <tbody>
             <tr>
-              <td colSpan='2'><h5>Общие данные по ТЗ</h5></td>
+              <td colSpan='2'><h2>Общие данные по ТЗ</h2></td>
             </tr>
             <tr>
               <td>Клиент</td>
@@ -232,11 +277,11 @@ const One_CP = ({match}) =>  {
             </tr>
             <tr>
               <td>Дата начала сбора КП</td>
-              <td>{cp.tz_date}</td>
+              <td>{cp.tz_date ? cp.tz_date.slice(0,10):''}</td>
             </tr>
             <tr>
               <td>Дата завершения сбора КП</td>
-              <td>{cp.tz_end_date}</td>
+              <td>{cp.tz_end_date ? cp.tz_end_date.slice(0,10):""}</td>
             </tr>
             <tr>
               <td>Доступ к данным ТЗ</td>
@@ -283,12 +328,13 @@ const One_CP = ({match}) =>  {
         
         
         <td valign='top' align='justify'>
-        <table className="table one_item" >
+          <div className="table-responsive">
+        <table className="table" >
           <thead>
           </thead>
           <tbody>
             <tr>
-              <td colSpan='2'><h5>Общие данные от поставщика</h5></td>
+              <td colSpan='2'><h2>Общие данные от поставщика</h2></td>
             </tr>
             <tr>
               <td>Поставщик</td>
@@ -300,15 +346,31 @@ const One_CP = ({match}) =>  {
             </tr>
             <tr>
               <td>Условия оплаты</td>
-              <td><input className='cr_input' name='pay_cond' value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)} placeholder={cp.pay_cond}></input></td>
+              <td>
+                <Dropdown> 
+                <InputGroup className="mb-3">
+              <Form.Control className='dr_input'  value={pay_cond} onChange={(e)=>setPay_cond(e.target.value)} placeholder={cp.pay_cond}/>
+                <Dropdown.Toggle split variant="secondary" id="dropdown-split-basic" drop='end' value={pay_cond}/>
+
+                <Dropdown.Menu align={{ lg: 'end' }}>
+                  {data ? data.countries ? data.countries.map((item, i) => { return(
+                    <Dropdown.Item key={'gr'+i} value={item} onSelect={(e)=>setPay_cond(item)}>{item}</Dropdown.Item>
+                    )}): 'Список пуст' :'Список пуст'}
+                </Dropdown.Menu>    
+                </InputGroup>
+              </Dropdown>
+                </td>
             </tr>
             <tr>
               <td>Дата предоставления КП</td>
-              <td>{cp.date}</td>
+              <td>{cp.date ? cp.date.slice(0, 10):''}</td>
             </tr>
             <tr>
               <td>Срок действия КП</td>
-              <td><input className='cr_input' name='pay_cond' value={end_date} onChange={(e)=>setEnd_date(e.target.value)} placeholder={cp.end_date}></input></td>
+              <td>
+                <label>Предыдущее значение - {cp.end_date ? cp.end_date.slice(0,10):''}</label>
+                <InputMask mask="9999-99-99" value={end_date} onChange={(e)=>{setEnd_date(e.target.value)}} className='cr_input' alwaysShowMask='true' />
+                </td>
             </tr>
             <tr>
               <td>Статус КП</td>
@@ -318,7 +380,7 @@ const One_CP = ({match}) =>  {
               <td colSpan="2"><h5>Описание работ от поставщика</h5></td>
             </tr>
             <tr>
-            <td colSpan="2"><input className='cr_input' name='pay_cond' value={info} onChange={(e)=>setInfo(e.target.value)} placeholder={cp.info}></input></td>
+            <td colSpan="2"><Form.Control className='cr_input' value={info} onChange={(e)=>setInfo(e.target.value)} placeholder={cp.info}></Form.Control></td>
             </tr>
             <tr>
               <td colSpan="2"><h5>Документация от поставщика</h5></td>
@@ -338,6 +400,7 @@ const One_CP = ({match}) =>  {
             </tr>
           </tbody>
         </table>
+        </div>
         </td>
         </tr>
         </tbody>
@@ -358,15 +421,23 @@ const One_CP = ({match}) =>  {
         <th>Наименование работ</th>
         <th>Единицы измерения</th>
         <th>Кол-во</th>
+        <th>Цена б/НДС/ед.</th>
+        <th>Итого б/НДС</th>
+        <th>Комментарий</th>
       </tr>
     </thead>
     <tbody>
-      {cp.tz_costs ? cp.tz_costs.map((item, i)=>{
+      {cst ? cst.map((item, i)=>{
         return (
       <tr>
         <td>{item.task}</td>
         <td>{item.metr}</td>
         <td>{item.count}</td>
+        <td>
+          <InputMask key={'rrr'+ i} mask='999999999999' maskChar={null} className='cr_input' id={"p"+i} onChange={onPPUChange} placeholder={item.ppu}></InputMask>
+        </td>
+        <td></td>
+        <td> <input className='cr_input' id={"i" + i} onChange={onInfoChange} placeholder={item.info}></input></td>
 
       </tr>)}): <p>Разбивка стоимости заказчиком не указана</p>}
     </tbody>
@@ -374,84 +445,45 @@ const One_CP = ({match}) =>  {
   
 
 </td>
-<td>
-<table className="table" id="org_table">
-    <thead>
-      <tr className="org_head">
-        <th>Цена б/НДС/ед.</th>
-        <th>Итого б/НДС</th>
-        <th>Комментарий</th>
-        </tr>
-    </thead>
-    <tbody>
-{cp.tz_costs ? cp.tz_costs.map((item, i)=>{
-        return (
-      <tr>
-        <td><input  name='pay_cond' id={i} placeholder={item.ppu} type="text"></input></td>
-        <td></td>
-        <td><input className='cr_input' name='pay_cond' id={i+100000} placeholder={item.info}></input></td>
-
-      </tr>)}): <p>Разбивка стоимости заказчиком не указана</p>}
-    </tbody>
-    </table>
-</td>
 </tr>
 </tbody>
 </table>
-
-<button type="button" id='ac_btn' className="btn btn-outline-dark" onClick={onClickCst}>Сохранить</button>
-
 
   <h5 className="text-start">График выполнения работ</h5>
   <table className="w-100">
                 <thead></thead>
                 <tbody>
                     <tr>
-                        <td valign='top' align='justify' width="50%">
+                        <td valign='top' align='justify' width="100%">
           <table className="table" id="org_table">
     <thead>
     <tr className="org_head">
         <th>Наименование работ</th>
         <th colSpan="2">Требования клиента</th>
+        <th colSpan="2">Предложение поставщика</th>
       </tr>
       <tr className="org_head">
         <th></th>
         <th>Период, КН</th>
         <th>Срок</th>
-      </tr>
-    </thead>
-    <tbody>
-      {cp.tz_calendars ? cp.tz_calendars.map((item, i)=>{ tz_last = tz_last + item.period
-        return (
-      <tr>
-        <td>{item.task_name}</td>
-        <td>{item.period}</td>
-        <td>{new Date(cp.end_date).getWeek() + tz_last}</td>
-      </tr>)}) : <p>План работ заказчиком не указан</p>}
-    </tbody>
-  </table> 
-  </td>
-  <td valign='top' align='justify' width="50%">
-  <table className="table" id="org_table">
-    <thead>
-    <tr className="org_head">
-        <th colSpan="3">Предложение поставщика</th>
-      </tr>
-      <tr className="org_head">
         <th>Период, КН</th>
         <th>Срок</th>
       </tr>
     </thead>
     <tbody>
-      {cp.tz_calendars ? cp.tz_calendars.map((item, i)=>{ last = last + item.period
+      {cal ? cal.map((item, i)=>{ tz_last = tz_last + item.period
         return (
       <tr>
-        <td><input className='cr_input' id={i+200000} name='pay_cond' pattern="[0-9]*" placeholder={item.period}></input></td>
+        <td>{item.task_name}</td>
+        <td>{item.period}</td>
+        <td>{new Date(cp.end_date).getWeek() + tz_last}</td>
+        <td>
+        <InputMask key={'ttt'+ i} mask='999999999999' maskChar={null} className='cr_input' id={"e"+i} onChange={onPeriodChange} placeholder={item.cp_period}></InputMask>
+        </td>
         <td></td>
-      </tr>)}) : <p></p> }
+      </tr>)}) : <p>План работ заказчиком не указан</p>}
     </tbody>
   </table> 
-  <button type="button" className="btn btn-outline-dark" id='sm_btn' onClick={onClickCal}>Сохранить</button>
   </td>
 </tr>
 </tbody>
@@ -460,7 +492,9 @@ const One_CP = ({match}) =>  {
   <h5 className="text-start">История изменений</h5>
   <textarea className='cr_area' value={cp.history} rows="5"></textarea>
 </div>
-<button type="button" className="btn btn-outline-dark" onClick={onClickAccept}>Подтвердить</button>
+<div className="enter">
+<button type="button" className="btn btn-outline-dark" onClick={onClickAccept}><h3>Подтвердить</h3></button>
+</div>
 </div>
 )
   }

@@ -41,19 +41,21 @@ const One_CP = ({match}) =>  {
     return(
         <div  className='one_item'>
           <div>
-       
-        <div>
+          {userInfo.o_id == cp.o_id ?
+          <button type="button" className="btn btn-outline-dark" onClick={onClickChange}>Изменить</button> :
+          <div></div>}
+        <div className='table-responsive'>
             <table className="w-100">
                 <thead></thead>
                 <tbody>
                     <tr>
                         <td valign='top' align='justify' width="50%">
-        <table className="table w-100 one_item" >
+        <table className="table w-100" >
           <thead>
           </thead>
           <tbody>
             <tr>
-              <td  colSpan='2'><h5>Общие данные по ТЗ</h5></td>
+              <td  colSpan='2'><h2>Общие данные по ТЗ</h2></td>
             </tr>
             <tr>
               <td >Клиент</td>
@@ -140,12 +142,12 @@ const One_CP = ({match}) =>  {
         
         
         <td valign='top' align='justify'>
-        <table className="table one_item" >
+        <table className="table" >
           <thead>
           </thead>
           <tbody>
             <tr>
-              <td  colSpan='2'><h5>Общие данные от поставщика</h5></td>
+              <td  colSpan='2'><h2>Общие данные от поставщика</h2></td>
             </tr>
             <tr>
               <td >Поставщик</td>
@@ -194,10 +196,6 @@ const One_CP = ({match}) =>  {
         </tbody>
         </table>
         </div>
-         
-         {userInfo.o_id === cp.o_id ?
-          <button type="button" className="btn btn-outline-dark" onClick={onClickChange}>Изменить</button> :
-          <div></div>}
 
           <h5 className="text-start">Разбивка стоимости</h5>
           <table className="w-100">
@@ -264,9 +262,9 @@ const One_CP = ({match}) =>  {
         return (
       <tr>
         <td>{item.task_name}</td>
-        <td>{item.tz_period}</td>
-        <td>{(new Date(cp.tz_end_date).getWeek() + tz_last)>52?new Date(cp.tz_end_date).getWeek() + tz_last-52:new Date(cp.tz_end_date).getWeek() + tz_last}</td>
         <td>{item.period}</td>
+        <td>{(new Date(cp.tz_end_date).getWeek() + tz_last)>52?new Date(cp.tz_end_date).getWeek() + tz_last-52:new Date(cp.tz_end_date).getWeek() + tz_last}</td>
+        <td>{item.cp_period}</td>
         <td>{new Date(cp.end_date).getWeek() + last}</td>
       </tr>)}): <p>Нет плана работ</p>}
     </tbody>
@@ -287,140 +285,3 @@ const One_CP = ({match}) =>  {
 
 const CP_One =withRouter(One_CP) 
 export default CP_One;
-
-
-
-
-
-/*let data = 
-    {'date': '14.01.2021',
-    'cp_id': '1',
-    'tz_date': '12.01.2021', 
-    'org': 'Организация 3', 
-    "o_id": '1',
-    "tz_o_id": '1',
-    "tz_org": 'Организация 8',
-    'tz_id': '4368', 
-    'end_date': '28.01.2021', 
-    'tz_end_date': '26.01.2021', 
-    'proj': 'ГК 6040', 
-    'group': 'Гофрокороб', 
-    'kind': 'Стандартная', 
-    'type': 'Одноразовая', 
-    'task': 'Изготовление серии', 
-    'tz_st': 'Активно', 
-    'tender_st': 'Не проведен', 
-    'count': '', 
-    'cp_st': 'Активно',
-    'tz_pay_cond': '100% постоплата',
-    'pay_cond': '30% предоплата',
-    'private': 'Общий', 
-    'tz_info': `Требуется изготовить и доставить 150 гофрокоробов. Изготавливаемая упаковка должна отвечать требованиям технической документации (см. вложение). Дополнительно необходимо нанести маркировку с 4-х сторон`,
-    "info": `Производится согласно ТЗ`,
-    "tz_docs": ["Пример.pdf", "1.doc"],
-    "docs": ["Договор.doc"],
-    "costs": [
-        {
-            "cost_id": 11,
-            "task": "Изготовление серии",
-            "metr": "шт.",
-            "count": 0,
-            "tz_id": 0,
-            "cp_id": 4,
-            "ppu": "150.00",
-            "sum": "22500.00",
-            "info": ""
-        },
-        {
-            "cost_id": 12,
-            "task": "Доставка",
-            "metr": "рейс",
-            "count": 0,
-            "tz_id": 0,
-            "cp_id": 4,
-            "ppu": "3000.00",
-            "sum": "3000.00",
-            "info": ""
-        }
-    ],
-    "tz_costs": [
-        {
-            "cost_id": 2,
-            "task": "Изготовление серии",
-            "metr": "шт.",
-            "count": 150,
-            "tz_id": 25,
-            "cp_id": 0,
-            "ppu": "0",
-            "sum": "0",
-            "info": ""
-        },
-        {
-            "cost_id": 3,
-            "task": "Доставка",
-            "metr": "рейс",
-            "count": 1,
-            "tz_id": 25,
-            "cp_id": 0,
-            "sum": "0",
-            "ppu": "0",
-            "info": ""
-        }
-    ],
-    "calendars": [
-        {
-            "cal_id": 19,
-            "name": "Разработка концепта",
-            "period": 1,
-            "term": 6,
-            "tz_id": 0,
-            "cp_id": 4
-        },
-        {
-            "cal_id": 20,
-            "name": "Изготовление серии",
-            "period": 1,
-            "term": 8,
-            "tz_id": 0,
-            "cp_id": 4
-        },
-        {
-            "cal_id": 21,
-            "name": "Доставка",
-            "period": 1,
-            "term": 9,
-            "tz_id": 0,
-            "cp_id": 4
-        }
-    ],
-    
-    "tz_calendars": [
-        {
-            "cal_id": 4,
-            "name": "Разработка концепта",
-            "period": 1,
-            "term": 7,
-            "tz_id": 25,
-            "cp_id": 0
-        },
-        {
-            "cal_id": 5,
-            "name": "Изготовление серии",
-            "period": 2,
-            "term": 9,
-            "tz_id": 25,
-            "cp_id": 0
-        },
-        {
-            "cal_id": 6,
-            "name": "Доставка",
-            "period": 1,
-            "term": 10,
-            "tz_id": 25,
-            "cp_id": 0
-        }
-    ],
-    "cp_docs": ["Презентация.pdf", "Предложение.doc"],
-    "tz_docs": ["Пример.pdf", "1.doc"],
-    "history": "" 
-    }*/

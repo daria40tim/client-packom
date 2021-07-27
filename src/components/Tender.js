@@ -44,17 +44,17 @@ const Tec = ({match}) => {
     return(
         <div  className='one_item'>
           <div>
-        <div>
-        <table className="table w-50 one_item" >
+        <div className='table-responsive'>
+        <table className="table w-50" >
           <thead>
           </thead>
           <tbody>
             <tr>
-              <td colSpan='2'><h5>Общие данные</h5></td>
+              <td colSpan='2'><h2>Общие данные</h2></td>
             </tr>
             <tr align='justify'>
               <td>Дата тендера</td>
-              <td>{tender.date}
+              <td>{tender.date ? tender.date.slice(0,10) :''}
                   </td>
             </tr>
             <tr align='justify'>
@@ -97,10 +97,6 @@ const Tec = ({match}) => {
               {tender.selected_cp !== 0 ? <Link to={`/cps/link/${tender.cp_id}`} >
                   {tender.selected_cp}
                 </Link> : 'КП не выбрано' }</td>
-            </tr>
-            <tr align='justify'>
-              <td>Срок реализации проекта</td>
-              <td>{new Date(tender.date).getWeek() + tender.term}</td>
             </tr>
           </tbody>
         </table>
@@ -169,9 +165,11 @@ const Tec = ({match}) => {
     </tbody>
   </table> }
 
+<div className="enter">
   {!tender.active ? 'Тендер был отменен':
-  tender.selected_cp === 0 ? !tender.cps ?<button type="button" className="btn btn-outline-dark" onClick={onClickDecline}>Отменить тендер</button> : tender.date> Date.now() ? <button type="button" onClick={onClickDecide} className="btn btn-outline-dark">Принять решение досрочно</button>
-: <button type="button" className="btn btn-outline-dark" onClick={onClickDecide}>Принять решение</button>: <p></p>}
+  tender.selected_cp === 0 ? !tender.cps ?<button type="button" className="btn btn-outline-dark" onClick={onClickDecline}><h5>Отменить тендер</h5></button> : tender.date> Date.now() ? <button type="button" onClick={onClickDecide} className="btn btn-outline-dark">Принять решение досрочно</button>
+: <button type="button" className="btn btn-outline-dark" onClick={onClickDecide}><h5>Принять решение</h5></button>: <p></p>}
+</div>
 </div>
 </div>
 )

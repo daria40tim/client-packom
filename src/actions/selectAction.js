@@ -1,5 +1,5 @@
 import axios from "axios"
-import { SELECT_ALL_FAIL, SELECT_ALL_REQUEST, SELECT_ALL_SUCCESS, SELECT_COUNTRY_FAIL, SELECT_COUNTRY_REQUEST, SELECT_COUNTRY_SUCCESS, SELECT_LOGIN_FAIL, SELECT_LOGIN_REQUEST, SELECT_LOGIN_SUCCESS, SELECT_SPECS_FAIL, SELECT_SPECS_REQUEST, SELECT_SPECS_SUCCESS } from "../constants/selectConstants"
+import { SELECT_ALL_FAIL, SELECT_ALL_REQUEST, SELECT_ALL_SUCCESS, SELECT_COUNTRY_FAIL, SELECT_COUNTRY_REQUEST, SELECT_COUNTRY_SUCCESS, SELECT_LOGIN_FAIL, SELECT_LOGIN_REQUEST, SELECT_LOGIN_SUCCESS, SELECT_PAY_CONDS_FAIL, SELECT_PAY_CONDS_REQUEST, SELECT_PAY_CONDS_SUCCESS, SELECT_SPECS_FAIL, SELECT_SPECS_REQUEST, SELECT_SPECS_SUCCESS } from "../constants/selectConstants"
 
 export const listSelect = () => async(dispatch) => {
     try {
@@ -109,6 +109,36 @@ export const listSelect = () => async(dispatch) => {
     } catch (error) {
       dispatch({
         type: SELECT_LOGIN_FAIL,
+        payload: error.response && error.response.data.message ? error.response.data.message : error.message
+      })
+    }
+  }
+
+  export const listPayConds = () => async(dispatch) => {
+    try {
+  
+      const userInfo = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
+      dispatch({type: SELECT_PAY_CONDS_REQUEST})
+      let auth = "Bearer " + userInfo.token
+  
+  
+      const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": auth
+        },
+        mode: 'cors'
+    }
+  
+      const { data } = await axios.get('http://127.0.0.1:8000/api/cps/payconds/', config)
+  
+      dispatch({
+        type: SELECT_PAY_CONDS_SUCCESS,
+        payload: data.data
+      })
+    } catch (error) {
+      dispatch({
+        type: SELECT_PAY_CONDS_FAIL,
         payload: error.response && error.response.data.message ? error.response.data.message : error.message
       })
     }
